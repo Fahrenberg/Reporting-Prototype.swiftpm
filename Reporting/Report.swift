@@ -31,28 +31,3 @@ extension Report {
         return data.write(ext: "pdf")
     }
 }
-// Internal Extensions
-fileprivate extension Data {
-    /// Write ````Data```` to temp file.
-    ///
-    /// - returns: URL to temp file.
-    func write(ext: String) -> URL? {
-        do {
-            let fileURL = fileURL(ext: ext)
-            try self.write(to: fileURL, options: .atomic)
-            return fileURL
-        }
-        catch {
-            return nil
-        }
-    }
-    private func fileURL(ext: String) -> URL {
-        let subDirectory = FileManager().temporaryDirectory.appendingPathComponent(Logger.subsystem)
-        try? FileManager.createDirectory(at: subDirectory)
-        let filename = "PDF-Reporting.\(ext)"
-        let cleanFilename = filename.replacingOccurrences(of: ":", with: "-")   // .addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? filename
-        return subDirectory.appending(path: cleanFilename)
-        
-        
-    }
-}

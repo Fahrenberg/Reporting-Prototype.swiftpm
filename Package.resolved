@@ -1,0 +1,32 @@
+{
+  "pins" : [
+    {
+      "identity" : "extensions",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/Fahrenberg/Extensions.git",
+      "state" : {
+        "revision" : "5de9f12ce3069663dccd42e7f99bde40348bffdc",
+        "version" : "3.4.2"
+      }
+    },
+    {
+      "identity" : "imagecompressionkit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/Fahrenberg/ImageCompressionKit.git",
+      "state" : {
+        "revision" : "a1835e047ac36517ec07a5c59297b4e370fd97eb",
+        "version" : "2.3.3"
+      }
+    },
+    {
+      "identity" : "tppdf",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/techprimate/TPPDF.git",
+      "state" : {
+        "revision" : "975049c0e1022922580b7927e030901604024925",
+        "version" : "2.6.1"
+      }
+    }
+  ],
+  "version" : 2
+}

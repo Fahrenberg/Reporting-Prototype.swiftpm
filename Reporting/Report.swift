@@ -28,6 +28,7 @@ extension Report {
         guard let data = data() else {
             return nil
         }
-        return data.write(ext: "pdf")
+        return nil
+        // return data.write(ext: "pdf")
     }
 }

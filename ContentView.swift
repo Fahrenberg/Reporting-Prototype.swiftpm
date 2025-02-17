@@ -4,7 +4,7 @@ import OSLog
 struct ContentView: View {
     // pdfData is now a @State variable
     @State private var pdfData: Data = Data() // Initialize with an empty Data object
-    @State private var reportType: ReportType = .TableReport
+    @State private var reportType: ReportType = .RecordReport
     var body: some View {
         VStack {
             if let pdfDocument = PDFDocument(data: pdfData), !pdfData.isEmpty {
@@ -16,7 +16,7 @@ struct ContentView: View {
             }
             Spacer()
             Picker("Report Type", selection: $reportType) {
-                Text("ExampleReport").tag(ReportType.ExampleReport)
+                Text("ReportRecord").tag(ReportType.RecordReport)
                 Text("MultipleLargeImageReport").tag(ReportType.MultipleLargeImageReport)
                 Text("TableReport").tag(ReportType.TableReport)
                 Text("ExternalPDF").tag(ReportType.PDFFile)
@@ -29,10 +29,10 @@ struct ContentView: View {
     // Example function to load PDF data
     private func loadSamplePDF(reportType: ReportType) {
         pdfData = Data()
-        var report: Report = ExampleReport()
+        var report: Report = RecordReport()
         switch reportType {
-        case .ExampleReport:
-            report =  ExampleReport()
+        case .RecordReport:
+            report =  RecordReport()
         case .MultipleLargeImageReport:
             report = MultipleLargeImageReport(imagesData: allImageData())
         case .TableReport:
@@ -71,7 +71,7 @@ struct PDFKitView: UIViewRepresentable {
 //    }
 //}
 enum ReportType {
-    case ExampleReport
+    case RecordReport
     case MultipleLargeImageReport
     case TableReport
     case PDFFile

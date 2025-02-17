@@ -87,7 +87,9 @@ extension TableReport {
             return ReportRecord(date: record.date,
                                 icon: record.icon + "-\(i)",
                                 text: record.text,
-                                amount: record.amount)
+                                amount: record.amount,
+                                scans: record.scans
+            )
         }
     }
 }

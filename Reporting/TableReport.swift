@@ -55,7 +55,7 @@ struct TableReport: Report {
     
     
     
-    func generateDocument() -> PDFDocument {
+    func generateDocument() -> [PDFDocument] {
         let document = PDFDocument(format: .a5)
         document.background.color = .white
         
@@ -75,9 +75,14 @@ struct TableReport: Report {
         addTotalRow(table: table)
         document.add(table: table)
         
-        return document
+        guard let rcrd = reportRecords.first else { return [document] }
+        let recordReport = RecordReport(reportRecord: rcrd)
+        let recordReportDocs = recordReport.generateDocument()
+        
+        // Flattening both document and recordReportDocs into a single array of PDFDocument
+        let documents: [PDFDocument] = [document] + recordReportDocs.compactMap { $0 }
+        return documents
     }
-    
 }
 
 extension TableReport {

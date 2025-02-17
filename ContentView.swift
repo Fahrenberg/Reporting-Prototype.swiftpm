@@ -29,10 +29,10 @@ struct ContentView: View {
     // Example function to load PDF data
     private func loadSamplePDF(reportType: ReportType) {
         pdfData = Data()
-        var report: Report = RecordReport()
+        var report: Report = RecordReport(reportRecord: ReportRecord.mockReportRecord)
         switch reportType {
         case .RecordReport:
-            report =  RecordReport()
+            report =  RecordReport(reportRecord: ReportRecord.mockReportRecord)
         case .MultipleLargeImageReport:
             report = MultipleLargeImageReport(imagesData: allImageData())
         case .TableReport:

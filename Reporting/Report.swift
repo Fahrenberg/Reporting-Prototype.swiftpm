@@ -9,19 +9,39 @@ import TPPDF
 import OSLog
 
 protocol Report {
-    func generateDocument() -> PDFDocument
+    func generateDocument() -> [PDFDocument]
 }
 
 extension Report {
     /// Create Data from PDF Document 
     func data() -> Data? {
-        let pdfDocument = generateDocument()
-        let generator = PDFGenerator(document: pdfDocument)
-        guard let data = try? generator.generateData() else {
+        let pdfDocuments = generateDocument()
+        let generator: PDFGeneratorProtocol?  // Define generator variable outside switch
+        
+        switch pdfDocuments.count {
+        case 0:
+            return nil
+        case 1:
+            generator = PDFGenerator(document: pdfDocuments.first!)
+        case let count where count > 1:
+            generator = PDFMultiDocumentGenerator(documents: pdfDocuments)
+        default:
             return nil
         }
-        return data
+        
+        guard let generator = generator else { // Use the generator safely
+            return nil
+        }
+        
+        do {
+            let data = try generator.generateData()
+            return data
+        } catch {
+            return nil
+        }
     }
+
+
     
     /// Write PDF Document with default filename to module temporary  directory
     func write() -> URL? {

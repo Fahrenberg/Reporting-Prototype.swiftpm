@@ -17,7 +17,7 @@ import Extensions
 struct MultipleLargeImageReport: Report {
     let imagesData: [Data]
     
-    func generateDocument() -> TPPDF.PDFDocument {
+    func generateDocument() -> [PDFDocument] {
         let pdfDoc = PDFDocument(format: .a4)
         pdfDoc.background.color = .lightGray
         
@@ -59,7 +59,7 @@ struct MultipleLargeImageReport: Report {
             pdfDoc.createNewPage()
             pdfDoc.add(space: 50)
         }
-        return pdfDoc
+        return [pdfDoc]
     }
 }
 

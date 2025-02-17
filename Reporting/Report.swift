@@ -33,7 +33,7 @@ extension Report {
 }
 // Internal Extensions
 
-extension Data {
+fileprivate extension Data {
     /// Write ````Data```` to temp file.
     ///
     /// - returns: URL to temp file.

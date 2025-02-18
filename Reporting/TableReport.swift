@@ -56,7 +56,7 @@ struct TableReport: Report {
     
     
     func generateDocument() -> [PDFDocument] {
-        let document = PDFDocument(format: .a5)
+        let document = PDFDocument(format: .a4)
         document.background.color = .white
         
         // Report Title

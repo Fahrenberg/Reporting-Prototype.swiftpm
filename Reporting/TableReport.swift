@@ -76,11 +76,11 @@ struct TableReport: Report {
         document.add(table: table)
         
         guard let rcrd = reportRecords.first else { return [document] }
-        let recordReport = RecordReport(reportRecord: rcrd)
-        let recordReportDocs = recordReport.generateDocument()
+        let singleBookingReport = SingleBookingReport(reportRecord: rcrd)
+        let bookingDocs = singleBookingReport.generateDocument()
         
         // Flattening both document and recordReportDocs into a single array of PDFDocument
-        let documents: [PDFDocument] = [document] + recordReportDocs.compactMap { $0 }
+        let documents: [PDFDocument] = [document] + bookingDocs.compactMap { $0 }
         return documents
     }
 }

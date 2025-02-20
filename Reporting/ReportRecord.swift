@@ -24,7 +24,7 @@ struct ReportRecord {
     static var mockReportRecord: ReportRecord {
         ReportRecord(
             date: Date().addingTimeInterval(Double.random(in: -1_000_000_000 ... 0)),
-            icon: "box",
+            icon: "truck.box",
             text: "Mock Report Record",
             amount: Double.random(in: 1000.0 ... 10000.00),
             scans: []

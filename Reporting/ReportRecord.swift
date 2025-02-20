@@ -19,6 +19,7 @@ struct ReportRecord {
     let text: String
     let amount: Double
     let scans: [Data]
+    var cashFlow: String { amount >=  0 ? "Einzahlung" : "Auszahlung" }
     
     static var mockReportRecord: ReportRecord {
         ReportRecord(

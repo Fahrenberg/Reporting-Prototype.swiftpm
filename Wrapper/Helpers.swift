@@ -7,7 +7,7 @@
 import Foundation
 import OSLog
 import Extensions
-
+import ImageCompressionKit
 
 public var exampleImageData: Data {
     let bundle = Bundle.module
@@ -33,6 +33,12 @@ public func allImageData() -> [Data] {
     }
 }
 
+public var logoImage: PlatformImage {
+    let bundle = Bundle.module
+    let imageURL = bundle.url(forResource: "RuKa", withExtension: "jpeg")!
+    let data =  try! Data(contentsOf: imageURL)
+    return PlatformImage(data: data)!
+}
 
 extension Logger {
     public static let subsystem = "\(Bundle.module.bundleIdentifier!)"

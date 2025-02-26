@@ -5,8 +5,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/Fahrenberg/Extensions.git",
       "state" : {
-        "revision" : "5de9f12ce3069663dccd42e7f99bde40348bffdc",
-        "version" : "3.4.2"
+        "revision" : "e6337297291dfc8ad9cb1f51f4bb1cacdf1decb8",
+        "version" : "4.0.2"
       }
     },
     {
@@ -14,8 +14,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/Fahrenberg/ImageCompressionKit.git",
       "state" : {
-        "revision" : "a1835e047ac36517ec07a5c59297b4e370fd97eb",
-        "version" : "2.3.3"
+        "revision" : "76b641b476a4033b5e20538515b40c9b55ea166f",
+        "version" : "2.3.4"
       }
     },
     {

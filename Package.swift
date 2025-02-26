@@ -36,16 +36,16 @@ let package = Package(
     ],
     dependencies: [
         .package(url: "https://github.com/techprimate/TPPDF.git", "2.6.1"..<"3.0.0"),
-        .package(url: "https://github.com/Fahrenberg/Extensions.git", "3.4.2"..<"4.0.0"),
-        .package(url: "https://github.com/Fahrenberg/ImageCompressionKit.git", "2.3.3"..<"3.0.0")
+        .package(url: "https://github.com/Fahrenberg/ImageCompressionKit.git", "2.3.3"..<"3.0.0"),
+        .package(url: "https://github.com/Fahrenberg/Extensions.git", "4.0.0"..<"5.0.0")
     ],
     targets: [
         .executableTarget(
             name: "AppModule",
             dependencies: [
                 .product(name: "TPPDF", package: "TPPDF"),
-                .product(name: "Extensions", package: "Extensions"),
-                .product(name: "ImageCompressionKit", package: "ImageCompressionKit")
+                .product(name: "ImageCompressionKit", package: "ImageCompressionKit"),
+                .product(name: "Extensions", package: "Extensions")
             ],
             path: ".",
             resources: [

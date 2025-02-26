@@ -12,13 +12,13 @@ struct SingleBookingReport: Report {
     let reportRecord: ReportRecord
     
     private let style = PDFLineStyle(type: .full, color: .darkGray, width: 0.5)
-    private let logoSize = CGSize(width: 200, height: 70)
+    private let logoSize = CGSize(width: 100, height: 50)
     
     
     private var logo: PDFImage {
-        guard let resizedImage = logoImage.resized(to: logoSize),
-              let finalImage = resizedImage.replacingTransparentPixels(with: .white)
+        guard let resizedImage = logoImage.resized(to: logoSize, alignment: .right)
         else { fatalError() }
+        let finalImage = resizedImage.fillFrame(frameColor: .white).addFrame(frameColor: .lightGray)
         return PDFImage(image: finalImage)
     }
 
@@ -26,15 +26,9 @@ struct SingleBookingReport: Report {
     func generateDocument() -> [PDFDocument] {
         let document = PDFDocument(format: .a4)
        
-        // not really a header is in the content area....
-        let headerGroup = PDFGroup(allowsBreaks: false,
-                                   backgroundColor: .green,
-                                   padding: EdgeInsets(top: 2, left: 2, bottom: 2, right: 2 )
-                                   )
-        headerGroup.add(.right, image: logo)
-        document.add(group: headerGroup)
+        // Logo Header
+        document.add(.contentRight, image: logo)
         document.add(space: 20.0)
-//        document.add(.headerRight, image: PDFImage(image: logoImage, size: logoSize, options: .rounded))
         
         document.addLineSeparator(PDFContainer.contentLeft, style: style)
         document.add(space: 10.0)

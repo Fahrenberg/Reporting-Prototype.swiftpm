@@ -1,11 +1,17 @@
-# Reporting Prototype using TPPDF Library
-Evaluating the TPPDF Library to generate account reports in RuKa (Kassensaldo)
+![](Reporting-Prototype-Icon.jpeg) 
 
-[Documentation TPPDF](https://github.com/techprimate/TPPDF/blob/main/Documentation/Usage.md)
+---------------
 
-See defintion of package.swift manifest
+Evaluating the [TPPDF Library](https://github.com/techprimate/TPPDF) to generate account reports in RuKa (Kassensaldo)
 
-https://skyaaron.com/posts/swiftpm-app-projects
+- [Documentation TPPDF](https://github.com/techprimate/TPPDF/blob/main/Documentation/Usage.md)
 
+- See defintion of package.swift manifest to add git and adjust dependencies
 
-Added to GitHub repo with my usual SSH key.
+- [iPadOS Swift Progamming Tools](https://skyaaron.com/posts/swiftpm-app-projects)
+
+- From Working Copy and terminal add to GitHub repo with  private SSH GitHub key.
+
+---------------
+
+<sup>(c) 2025 [Jean-Nicolas Fahrenberg](https://www.fahrenberg.app)</sup>

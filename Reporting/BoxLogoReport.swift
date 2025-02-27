@@ -15,9 +15,9 @@ struct BoxLogoReport: Report {
     
     
     private var logo: PDFImage {
-        guard let resizedImage = logoImage.resized(to: logoSize),
-              let finalImage = resizedImage.replacingTransparentPixels(with: .white)
+        guard let resizedImage = logoImage.resized(to: logoSize)
         else { fatalError() }
+        let finalImage = resizedImage.fillFrame(frameColor: .white)
         return PDFImage(image: finalImage)
     }
 

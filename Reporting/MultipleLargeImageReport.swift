@@ -27,9 +27,11 @@ struct MultipleLargeImageReport: Report {
                               height:pdfDoc.layout.height / 2 - 100 )
            
             guard let image = PlatformImage(data: data),
-                  let resizedImage = image.resized(to: size),
-                  let finalImage = resizedImage.replacingTransparentPixels(with: .lightGray)
+                  let resizedImage = image.resized(to: size)
             else { return nil }
+            let finalImage = resizedImage
+                .fillFrame(frameColor: .lightGray)
+                .addFrame()
             let pdfImage = PDFImage(image: finalImage)
             let finalDataSize = finalImage.jpgDataCompression()?.count ?? 0
             

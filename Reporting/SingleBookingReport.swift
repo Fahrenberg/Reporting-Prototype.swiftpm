@@ -12,7 +12,7 @@ struct SingleBookingReport: Report {
     let reportRecord: ReportRecord
     
     private let dividerLineStyle = PDFLineStyle(type: .full, color: .darkGray, width: 0.5)
-    private let logoSize = CGSize(width: 100, height: 70)
+    private let logoSize = CGSize(width: 300, height: 70)
     private let digitStyle = PDFTableCellStyle(font: SingleBookingFonts.digit)
     private let boldTextStyle = PDFTableCellStyle(font: SingleBookingFonts.bold)
     private let textStyle = PDFTableCellStyle(font: SingleBookingFonts.regular)

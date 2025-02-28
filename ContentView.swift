@@ -1,6 +1,8 @@
 import SwiftUI
 import PDFKit
 import OSLog
+import Extensions
+
 struct ContentView: View {
     // pdfData is now a @State variable
     @State private var pdfData: Data = Data() // Initialize with an empty Data object
@@ -47,10 +49,13 @@ struct ContentView: View {
         else { 
             Logger.source.error("Cannot create report!")
             print("Cannot create report!")
-            pdfData = Data() 
+            pdfData = Data()
             return
         }
         pdfData = data
+        let pdfDoc = PDFDocument(data: data)!
+        try? pdfDoc.write(to: PlatformImage.tempDirectory().appending(path: "report.pdf"))
+        print(try? PlatformImage.tempDirectory().absoluteString ?? "no temp")
     }
 }
 

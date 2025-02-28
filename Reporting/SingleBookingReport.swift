@@ -31,7 +31,6 @@ struct SingleBookingReport: Report {
     private var cashFlowFormatted: String {
             reportRecord.cashFlow
     }
-    
     private var amountFormatted: String { 
         let amountValue = Decimal(reportRecord.amount) // Ensure Decimal type
         return "CHF " + amountValue.formatted(
@@ -45,8 +44,6 @@ struct SingleBookingReport: Report {
             .locale(Locale(identifier: "de-CH"))
         return reportRecord.date.formatted(style)
     }
-
-    
     private var iconImage: PlatformImage {
         let symbolSize = CGSize(width: 40, height: 40)
        let symbolImage = UIImage(systemName: reportRecord.icon) ?? UIImage(systemName: "questionmark")!
@@ -90,7 +87,39 @@ struct SingleBookingReport: Report {
         document.add(space: 10.0)
         document.addLineSeparator(PDFContainer.contentLeft, style: dividerLineStyle)
        
-        // add scans
+        let pdfImages: [PlatformImage] = reportRecord.scans.compactMap { data in
+            guard let resizedImage = PlatformImage(data: data)?.resized(to: CGSize(width: 500, height: 500)) else {return nil}
+                    return resizedImage.fillFrame().addFrame()
+        }
+        
+        document.add(space: 10.0)
+        let fourPDFImages = pdfImages.chunked(into: 4)
+        let pageCount = fourPDFImages.count
+        var currentPage = 1
+        
+        for pdfImages in fourPDFImages {
+            let group = PDFGroup(allowsBreaks: false)
+            let imageTable = PDFTable(rows: 2, columns: 2)
+            imageTable.widths = [0.5, 0.5]
+            
+            let row1 = imageTable[row: 0]
+            row1.content = [pdfImages[0], pdfImages[0]]
+            let row2 = imageTable[row: 1]
+            row2.content = [pdfImages[0], pdfImages[0]]
+            document.add(table: imageTable)
+            
+            document.add(group: group)
+            currentPage += 1
+            if currentPage <= pageCount {
+                document.createNewPage()
+                document.addLineSeparator(PDFContainer.contentLeft, style: dividerLineStyle)
+                document.add(.contentLeft, text: "\(reportRecord.text) (\(currentPage)/\(pageCount))")
+                document.add(space: 50.0)
+                document.addLineSeparator(PDFContainer.contentLeft, style: dividerLineStyle)
+                document.add(space: 10.0)
+            }
+           
+        }
         
         //
 
@@ -130,3 +159,43 @@ fileprivate var rowTableStyle: PDFTableStyle {
         alternatingContentStyle: nil
     )
     }
+
+func resizeImageKeepingAspectRatio(_ image: UIImage, to targetSize: CGSize) -> UIImage {
+    let aspectRatio = image.size.width / image.size.height
+    var newSize: CGSize
+    
+    if targetSize.width / targetSize.height > aspectRatio {
+        newSize = CGSize(width: targetSize.height * aspectRatio, height: targetSize.height)
+    } else {
+        newSize = CGSize(width: targetSize.width, height: targetSize.width / aspectRatio)
+    }
+
+    let renderer = UIGraphicsImageRenderer(size: newSize)
+    
+    return renderer.image { context in
+        image.draw(in: CGRect(origin: .zero, size: newSize))
+    }
+}
+/*
+ 
+ // add scans
+ let pdfImages: [PDFImage] = reportRecord.scans.enumerated().compactMap { (index, data) in
+     let size = CGSize(width: document.layout.width / 2 - 10,
+                       height:document.layout.height / 2 - 120 )
+     guard let image = PlatformImage(data: data),
+           let resizedImage = image.resized(to: size * 4)
+     else { return nil }
+
+     let finalImage = resizedImage
+         .fillFrame(frameColor: .lightGray)
+         .addFrame()
+     let pdfImage = PDFImage(image: finalImage)
+     let finalDataSize = finalImage.jpgDataCompression()?.count ?? 0
+     
+     let caption =  PDFSimpleText(text: "\(index + 1) - \(data.count.outputMBytes) - \(finalDataSize.outputMBytes)") // Index as caption (1-based)
+     pdfImage.caption = caption
+     pdfImage.quality = 1.0
+     return pdfImage
+ }
+ 
+ */

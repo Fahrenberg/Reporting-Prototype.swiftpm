@@ -15,7 +15,7 @@ public var exampleImageData: Data {
     return try! Data(contentsOf: imageURL!)
 }
 
-public func imageData(filename: String = "1556181D-AF21-468E-9B17-72FA7469D469") -> Data {
+public func imageData(filename: String = "0A0BFAFA-90DD-40D4-97A3-E6FDA59128C2") -> Data {
     let bundle = Bundle.module
     guard let imageURL = bundle.url(forResource: filename, withExtension: "png") 
             else { 

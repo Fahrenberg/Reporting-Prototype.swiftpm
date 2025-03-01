@@ -74,14 +74,7 @@ struct TableReport: Report {
         addTableContent(table: table)
         addTotalRow(table: table)
         document.add(table: table)
-        
-        guard let rcrd = reportRecords.first else { return [document] }
-        let singleBookingReport = SingleBookingReport(reportRecord: rcrd)
-        let bookingDocs = singleBookingReport.generateDocument()
-        
-        // Flattening both document and recordReportDocs into a single array of PDFDocument
-        let documents: [PDFDocument] = [document] + bookingDocs.compactMap { $0 }
-        return documents
+        return [document]
     }
 }
 

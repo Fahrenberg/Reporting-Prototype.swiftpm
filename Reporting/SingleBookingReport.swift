@@ -7,6 +7,7 @@ import TPPDF
 import ImageCompressionKit
 import Extensions
 import CoreGraphics
+import OSLog
 
 struct SingleBookingReport: Report {
     let reportRecord: ReportRecord
@@ -26,7 +27,7 @@ struct SingleBookingReport: Report {
         guard let resizedImage = logoImage.resized(to: logoSize, alignment: .right)
         else { fatalError() }
         let finalImage = resizedImage.fillFrame(frameColor: .white).addFrame(frameColor: .lightGray)
-        return PDFImage(image: finalImage, quality: 1.0)
+        return PDFImage(image: finalImage, options: [.none])
     }
     private var cashFlowFormatted: String {
             reportRecord.cashFlow
@@ -55,7 +56,8 @@ struct SingleBookingReport: Report {
     
     func generateDocument() -> [PDFDocument] {
         let document = PDFDocument(format: .a4)
-       
+        print("PDFDocument \(document.debugDescription)")
+        Logger.source.info("PDFDocument: \(document.debugDescription) ")
         // Logo Header
         document.add(.contentRight, image: logo)
         document.add(space: 20.0)
@@ -82,15 +84,19 @@ struct SingleBookingReport: Report {
         // Set table padding and margin
         row2Table.margin = 5.0
         document.add(table: row2Table)
+        
         //
         
         document.add(space: 10.0)
         document.addLineSeparator(PDFContainer.contentLeft, style: dividerLineStyle)
        
+        // Scans
+        let scanSize = CGSize(width: (document.layout.width - document.layout.margin.left - document.layout.margin.right) / 2 - 10,
+                              height: (document.layout.height - document.layout.margin.top - document.layout.margin.bottom) / 2 - 120 )
         let pdfImages: [PlatformImage] = reportRecord.scans.compactMap { data in
-            guard let resizedImage = PlatformImage(data: data)?.resized(to: CGSize(width: 500, height: 500)) else {return nil}
+            guard let resizedImage = PlatformImage(data: data)?.resized(to: scanSize) else {return nil}
                     return resizedImage.fillFrame().addFrame()
-        }
+        }.dropLast()
         
         document.add(space: 10.0)
         let fourPDFImages = pdfImages.chunked(into: 4)
@@ -98,17 +104,28 @@ struct SingleBookingReport: Report {
         var currentPage = 1
         
         for pdfImages in fourPDFImages {
-            let group = PDFGroup(allowsBreaks: false)
-            let imageTable = PDFTable(rows: 2, columns: 2)
-            imageTable.widths = [0.5, 0.5]
+            let imageGroup = PDFGroup(allowsBreaks: false, backgroundColor: .white)
+            var pdfImagesRow: [PDFImage] = []
+
+            for image in pdfImages {
+                // Retrieve the image data using the image name.
+                let pdfImage = PDFImage(image: image, options: [.none])
+                pdfImagesRow.append(pdfImage)
+                
+                // When two images have been collected, add them as a row and reset the temporary array.
+                if pdfImagesRow.count == 2 {
+                    imageGroup.add(.left, imagesInRow: pdfImagesRow)
+                    imageGroup.add(space: 5)
+                    pdfImagesRow.removeAll()
+                }
+            }
+
+            // If there's one image left after the loop, add it as a single-image row.
+            if !pdfImagesRow.isEmpty {
+                imageGroup.add(.left, imagesInRow: pdfImagesRow)
+            }
             
-            let row1 = imageTable[row: 0]
-            row1.content = [pdfImages[0], pdfImages[0]]
-            let row2 = imageTable[row: 1]
-            row2.content = [pdfImages[0], pdfImages[0]]
-            document.add(table: imageTable)
-            
-            document.add(group: group)
+            document.add(group: imageGroup)
             currentPage += 1
             if currentPage <= pageCount {
                 document.createNewPage()
@@ -158,44 +175,5 @@ fileprivate var rowTableStyle: PDFTableStyle {
             )),
         alternatingContentStyle: nil
     )
-    }
-
-func resizeImageKeepingAspectRatio(_ image: UIImage, to targetSize: CGSize) -> UIImage {
-    let aspectRatio = image.size.width / image.size.height
-    var newSize: CGSize
-    
-    if targetSize.width / targetSize.height > aspectRatio {
-        newSize = CGSize(width: targetSize.height * aspectRatio, height: targetSize.height)
-    } else {
-        newSize = CGSize(width: targetSize.width, height: targetSize.width / aspectRatio)
-    }
-
-    let renderer = UIGraphicsImageRenderer(size: newSize)
-    
-    return renderer.image { context in
-        image.draw(in: CGRect(origin: .zero, size: newSize))
-    }
 }
-/*
- 
- // add scans
- let pdfImages: [PDFImage] = reportRecord.scans.enumerated().compactMap { (index, data) in
-     let size = CGSize(width: document.layout.width / 2 - 10,
-                       height:document.layout.height / 2 - 120 )
-     guard let image = PlatformImage(data: data),
-           let resizedImage = image.resized(to: size * 4)
-     else { return nil }
 
-     let finalImage = resizedImage
-         .fillFrame(frameColor: .lightGray)
-         .addFrame()
-     let pdfImage = PDFImage(image: finalImage)
-     let finalDataSize = finalImage.jpgDataCompression()?.count ?? 0
-     
-     let caption =  PDFSimpleText(text: "\(index + 1) - \(data.count.outputMBytes) - \(finalDataSize.outputMBytes)") // Index as caption (1-based)
-     pdfImage.caption = caption
-     pdfImage.quality = 1.0
-     return pdfImage
- }
- 
- */

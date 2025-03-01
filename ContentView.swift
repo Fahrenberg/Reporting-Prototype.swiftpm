@@ -6,7 +6,7 @@ import Extensions
 struct ContentView: View {
     // pdfData is now a @State variable
     @State private var pdfData: Data = Data() // Initialize with an empty Data object
-    @State private var reportType: ReportType = .SingleBookingReport   
+    @State private var reportType: ReportType = .PlaygroundReport
     var body: some View {
         VStack {
             if let pdfDocument = PDFDocument(data: pdfData), !pdfData.isEmpty {
@@ -19,7 +19,7 @@ struct ContentView: View {
             Spacer()
             Picker("Report Type", selection: $reportType) {
                 Text("SingleBookingReport").tag(ReportType.SingleBookingReport)
-                Text("Box and Logo Report").tag(ReportType.BoxLogoReport)
+                Text("PlaygroundReport").tag(ReportType.PlaygroundReport)
                 Text("MultipleLargeImageReport").tag(ReportType.MultipleLargeImageReport)
                 Text("TableReport").tag(ReportType.TableReport)
                 Text("ExternalPDF").tag(ReportType.PDFFile)
@@ -36,8 +36,8 @@ struct ContentView: View {
         switch reportType {
         case .SingleBookingReport:
             report =  SingleBookingReport(reportRecord: ReportRecord.mockReportRecord)
-        case .BoxLogoReport:
-            report = BoxLogoReport()
+        case .PlaygroundReport:
+            report = PlaygroundReport()
         case .MultipleLargeImageReport:
             report = MultipleLargeImageReport(imagesData: allImageData())
         case .TableReport:
@@ -80,7 +80,7 @@ struct PDFKitView: UIViewRepresentable {
 //}
 enum ReportType {
     case SingleBookingReport
-    case BoxLogoReport
+    case PlaygroundReport
     case MultipleLargeImageReport
     case TableReport
     case PDFFile

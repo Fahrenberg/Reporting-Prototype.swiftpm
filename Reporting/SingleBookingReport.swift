@@ -12,6 +12,7 @@ import OSLog
 struct SingleBookingReport: Report {
     let reportRecord: ReportRecord
     
+    private let document = PDFDocument(format: .a4)
     private let dividerLineStyle = PDFLineStyle(type: .full, color: .darkGray, width: 0.5)
     private let logoSize = CGSize(width: 300, height: 70)
     private let digitStyle = PDFTableCellStyle(font: SingleBookingFonts.digit)
@@ -47,7 +48,7 @@ struct SingleBookingReport: Report {
     }
     private var iconImage: PlatformImage {
         let symbolSize = CGSize(width: 40, height: 40)
-       let symbolImage = UIImage(systemName: reportRecord.icon) ?? UIImage(systemName: "questionmark")!
+        let symbolImage = UIImage(systemName: reportRecord.icon) ?? UIImage(systemName: "questionmark")!
         guard let resizedImage = symbolImage.resized(to: symbolSize, alignment: .left)
         else { fatalError() }
         let finalImage = resizedImage.fillFrame(frameColor: .white).addFrame(frameColor: .lightGray)
@@ -55,14 +56,23 @@ struct SingleBookingReport: Report {
     }
     
     func generateDocument() -> [PDFDocument] {
-        let document = PDFDocument(format: .a4)
         print("PDFDocument \(document.debugDescription)")
         Logger.source.info("PDFDocument: \(document.debugDescription) ")
+        addHeader()
+        addFullReportInfo()
+        addScans()
+
+        return [document]
+    }
+    func addHeader() {
         // Logo Header
         document.add(.contentRight, image: logo)
         document.add(space: 20.0)
-        
+    }
+    
+    func addFullReportInfo() {
         document.addLineSeparator(PDFContainer.contentLeft, style: dividerLineStyle)
+        document.add(space: 5.0)
         // Add booking information as table
         let row1Table = PDFTable(rows: 1, columns: 2)
         row1Table.style = rowTableStyle
@@ -70,8 +80,6 @@ struct SingleBookingReport: Report {
         row1.content = [cashFlowFormatted , dateFormatted]
         row1.style = [boldTextStyle, textStyle]
         row1.alignment = [.left, .right]
-        row1Table.margin = 5.0
-        
         document.add(table: row1Table)
         
         let row2Table = PDFTable(rows: 1, columns: 3)
@@ -82,23 +90,44 @@ struct SingleBookingReport: Report {
         row2.style = [textStyle, textStyle, digitStyle]
         row2.alignment = [.left, .left, .right] 
         // Set table padding and margin
-        row2Table.margin = 5.0
         document.add(table: row2Table)
         
-        //
-        
-        document.add(space: 10.0)
+        document.add(space: 5.0)
         document.addLineSeparator(PDFContainer.contentLeft, style: dividerLineStyle)
-       
+        
+    }
+    
+    func addReducedReportInfo(scanPage: Int, allScanPages: Int) {
+        document.addLineSeparator(PDFContainer.contentLeft, style: dividerLineStyle)
+        document.add(.contentLeft, text: "\(reportRecord.text) (\(scanPage)/\(allScanPages))")
+        document.add(space: 50.0)
+        document.addLineSeparator(PDFContainer.contentLeft, style: dividerLineStyle)
+        document.add(space: 10.0)
+    }
+    func addScans() {
         // Scans
-        let scanSize = CGSize(width: (document.layout.width - document.layout.margin.left - document.layout.margin.right) / 2 - 10,
-                              height: (document.layout.height - document.layout.margin.top - document.layout.margin.bottom) / 2 - 120 )
+        let scansSize = CGSize(width: document.layout.width
+                                      - document.layout.margin.left
+                                      - document.layout.margin.right,
+                              height: document.layout.height 
+                                       - document.layout.margin.top 
+                                       - document.layout.margin.bottom
+                                       -  10 // Spacer before scans
+                                       - 200 // Report info & header
+        )
+        document.add(space: 10.0)
+        
+        /// Four scans (2x2) per page, 5 point spacer between scans
+        let scanWidth = scansSize.width / 2 - 5
+        let scanHeight = scansSize.height / 2
+        let scanSize = CGSize(width: scanWidth, height: scanHeight)
+        
         let pdfImages: [PlatformImage] = reportRecord.scans.compactMap { data in
             guard let resizedImage = PlatformImage(data: data)?.resized(to: scanSize) else {return nil}
-                    return resizedImage.fillFrame().addFrame()
+            return resizedImage.fillFrame().addFrame()
         }.dropLast()
         
-        document.add(space: 10.0)
+
         let fourPDFImages = pdfImages.chunked(into: 4)
         let pageCount = fourPDFImages.count
         var currentPage = 1
@@ -106,7 +135,7 @@ struct SingleBookingReport: Report {
         for pdfImages in fourPDFImages {
             let imageGroup = PDFGroup(allowsBreaks: false, backgroundColor: .white)
             var pdfImagesRow: [PDFImage] = []
-
+            
             for image in pdfImages {
                 // Retrieve the image data using the image name.
                 let pdfImage = PDFImage(image: image, options: [.none])
@@ -119,7 +148,7 @@ struct SingleBookingReport: Report {
                     pdfImagesRow.removeAll()
                 }
             }
-
+            
             // If there's one image left after the loop, add it as a single-image row.
             if !pdfImagesRow.isEmpty {
                 imageGroup.add(.left, imagesInRow: pdfImagesRow)
@@ -129,18 +158,11 @@ struct SingleBookingReport: Report {
             currentPage += 1
             if currentPage <= pageCount {
                 document.createNewPage()
-                document.addLineSeparator(PDFContainer.contentLeft, style: dividerLineStyle)
-                document.add(.contentLeft, text: "\(reportRecord.text) (\(currentPage)/\(pageCount))")
-                document.add(space: 50.0)
-                document.addLineSeparator(PDFContainer.contentLeft, style: dividerLineStyle)
-                document.add(space: 10.0)
+                addHeader()
+                addReducedReportInfo(scanPage: currentPage, allScanPages: pageCount)
             }
-           
+            
         }
-        
-        //
-
-        return [document]
     }
 }
 

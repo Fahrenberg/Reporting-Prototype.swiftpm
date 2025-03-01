@@ -23,7 +23,8 @@ struct ContentView: View {
                 Text("MultipleLargeImageReport").tag(ReportType.MultipleLargeImageReport)
                 Text("TableReport").tag(ReportType.TableReport)
                 Text("ExternalPDF").tag(ReportType.PDFFile)
-            }.padding()
+            }
+            .padding(.top, 5)
         }
         .onChange(of: reportType) { loadSamplePDF(reportType: reportType) }
         .onAppear { loadSamplePDF(reportType: reportType) }

@@ -56,3 +56,11 @@ extension PDFDocument: @retroactive CustomDebugStringConvertible {
         return "size \(self.layout.height) h x \(self.layout.width) w, margin \(self.layout.margin)"
     }
 }
+
+public extension Array {
+    func chunked(into size: Int) -> [[Element]] {
+        return stride(from: 0, to: self.count, by: size).map {
+            Array(self[$0 ..< Swift.min($0 + size, self.count)])
+        }
+    }
+}

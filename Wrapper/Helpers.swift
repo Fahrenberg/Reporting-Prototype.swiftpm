@@ -8,6 +8,7 @@ import Foundation
 import OSLog
 import Extensions
 import ImageCompressionKit
+import TPPDF
 
 public var exampleImageData: Data {
     let bundle = Bundle.module
@@ -48,4 +49,10 @@ public var logoImage: PlatformImage {
 extension Logger {
     public static let subsystem = "\(Bundle.module.bundleIdentifier!)"
     public static let source = Logger(subsystem: subsystem, category: "PDF_Reporting (main)")
+}
+
+extension PDFDocument: @retroactive CustomDebugStringConvertible {
+    public var debugDescription: String {
+        return "size \(self.layout.height) h x \(self.layout.width) w, margin \(self.layout.margin)"
+    }
 }

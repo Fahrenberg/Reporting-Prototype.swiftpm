@@ -6,7 +6,7 @@ import Extensions
 struct ContentView: View {
     // pdfData is now a @State variable
     @State private var pdfData: Data = Data() // Initialize with an empty Data object
-    @State private var reportType: ReportType = .PlaygroundReport
+    @State private var reportType: ReportType = .SingleBookingReport
     var body: some View {
         VStack {
             if let pdfDocument = PDFDocument(data: pdfData), !pdfData.isEmpty {
@@ -54,8 +54,23 @@ struct ContentView: View {
         }
         pdfData = data
         let pdfDoc = PDFDocument(data: data)!
-        try? pdfDoc.write(to: PlatformImage.tempDirectory().appending(path: "report.pdf"))
-        print(try? PlatformImage.tempDirectory().absoluteString ?? "no temp")
+        save(pdfDocument: pdfDoc)
+    }
+    
+    private func save(pdfDocument: PDFDocument) {
+        enum saveError: Error {
+           case cannotWrite
+        }
+        do {
+            let directory = try PlatformImage.tempDirectory()
+            let file = directory.appending(path: "report.pdf")
+            let sucess = pdfDocument.write(to: file)
+            if !sucess { throw saveError.cannotWrite}
+            print(file.absoluteString)
+        }
+            catch {
+                print("Cannot save PDFDocument \(error.localizedDescription)")
+            }
     }
 }
 

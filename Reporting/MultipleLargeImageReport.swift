@@ -15,10 +15,20 @@ import ImageCompressionKit
 import Extensions
 
 struct MultipleLargeImageReport: Report {
-   
+
     
     func generateDocument() -> [PDFDocument] {
-       return []
+        let reportRecords = TableReport.mockReportRecords
+        let table = TableReport(reportRecords: reportRecords)
+        var document = table.generateDocument()
+        
+        for reportRecord in reportRecords {
+            let scanReport = SingleBookingReport(reportRecord: reportRecord).generateDocument()
+            document += scanReport
+        }
+        
+        
+        return document
     }
 }
 

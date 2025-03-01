@@ -42,10 +42,7 @@ struct PlaygroundReport: Report {
         document.add(space: 10.0)
         
         // Test
-        let imageNames = ["0B1AAB7D-93F9-4B4A-A5ED-247AA02137BD",
-                          "0A0BFAFA-90DD-40D4-97A3-E6FDA59128C2",
-                          "00EAA8D5-B01E-47E8-A4C9-6FF9C48B7C3C",
-                          "2DF0E853-55DD-4969-B360-D034DE087740"]
+        let imageNames = allImageFilenames().prefix(4)
 
         let scanSize = CGSize(width: document.layout.width / 2 - 10,
                           height:document.layout.height / 2 - 80 )

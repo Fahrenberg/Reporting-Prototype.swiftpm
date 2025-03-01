@@ -24,12 +24,17 @@ public func imageData(filename: String = "0A0BFAFA-90DD-40D4-97A3-E6FDA59128C2")
     return try! Data(contentsOf: imageURL)
 }
 
-public func allImageData() -> [Data] {
+public func allImageFilenames() -> [String] {
     let bundle = Bundle.module
     guard let allImagesURL = bundle.urls(forResourcesWithExtension: "png", subdirectory: nil) else { return [] }
     return allImagesURL.map { imageURL in
-        let filenameWithoutExtension = imageURL.deletingPathExtension().lastPathComponent
-        return imageData(filename: filenameWithoutExtension)
+        imageURL.deletingPathExtension().lastPathComponent
+    }
+}
+
+public func allImageData() -> [Data] {
+    return allImageFilenames().map { filenme in
+        return imageData(filename: filenme)
     }
 }
 

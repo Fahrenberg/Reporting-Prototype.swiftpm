@@ -13,8 +13,9 @@ struct ContentView: View {
                 PDFKitView(pdfDocument: pdfDocument)
                     .edgesIgnoringSafeArea(.all)
             } else {
+                Spacer()
                 Text("No PDF to display")
-                    .padding()
+                Spacer()
             }
             Spacer()
             Picker("Report Type", selection: $reportType) {
@@ -40,7 +41,7 @@ struct ContentView: View {
         case .PlaygroundReport:
             report = PlaygroundReport()
         case .MultipleLargeImageReport:
-            report = MultipleLargeImageReport(imagesData: allImageData())
+            report = MultipleLargeImageReport()
         case .TableReport:
             report = TableReport(reportRecords: TableReport.mockReportRecords)
         case .PDFFile:

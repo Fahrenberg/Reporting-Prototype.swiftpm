@@ -80,11 +80,11 @@ struct TableReport: Report {
 
 extension TableReport {
     static var mockReportRecords: [ReportRecord] {
-        return (0..<40).map { i in
+        return (0..<5).map { i in
             let record = ReportRecord.mockReportRecord
             return ReportRecord(date: record.date,
-                                icon: record.icon + "-\(i)",
-                                text: record.text,
+                                icon: record.icon,
+                                text: record.text + "-\(i+1)",
                                 amount: record.amount,
                                 scans: record.scans
             )

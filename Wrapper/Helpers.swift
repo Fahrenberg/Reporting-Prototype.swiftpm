@@ -11,31 +11,34 @@ import ImageCompressionKit
 import TPPDF
 
 public var exampleImageData: Data {
-    let bundle = Bundle.module
+    let bundle = Bundle.main
     let imageURL = bundle.url(forResource: "large", withExtension: "png")
     return try! Data(contentsOf: imageURL!)
 }
 
 public func imageData(filename: String = "0A0BFAFA-90DD-40D4-97A3-E6FDA59128C2") -> Data {
-    let bundle = Bundle.module
-    guard let imageURL = bundle.url(forResource: filename, withExtension: "png") 
+    let bundle = Bundle.main
+    guard let imageURL = bundle.url(forResource: filename, withExtension: "png")
             else { 
         print("image not found: \(filename)")
         return Data() }
+    print("imagaData: \(filename): \(imageURL.absoluteString)")
     return try! Data(contentsOf: imageURL)
 }
-
 public func allImageFilenames() -> [String] {
-    let bundle = Bundle.module
+    let bundle = Bundle.main
+
+    // Explicitly search in "Resources/Scans"
     guard let allImagesURL = bundle.urls(forResourcesWithExtension: "png", subdirectory: nil) else { return [] }
-    return allImagesURL.map { imageURL in
-        imageURL.deletingPathExtension().lastPathComponent
-    }
+    return allImagesURL
+        .map { $0.deletingPathExtension().lastPathComponent }
+        .filter { !$0.contains("AppIcon") } // Exclude AppIcon
 }
 
+
 public func allImageData() -> [Data] {
-    return allImageFilenames().map { filenme in
-        return imageData(filename: filenme)
+    return allImageFilenames().map { filename in
+        return imageData(filename: filename)
     }
 }
 

@@ -6,7 +6,7 @@ import Extensions
 struct ContentView: View {
     // pdfData is now a @State variable
     @State private var pdfData: Data = Data() // Initialize with an empty Data object
-    @State private var reportType: ReportType = .MultipleLargeImageReport
+    @State private var reportType: ReportType = .SingleBookingReport
     var body: some View {
         VStack {
             if let pdfDocument = PDFDocument(data: pdfData), !pdfData.isEmpty {

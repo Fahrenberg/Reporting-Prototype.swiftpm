@@ -14,7 +14,7 @@ import TPPDF
 import ImageCompressionKit
 import Extensions
 
-struct MultipleLargeImageReport: Report {
+struct FullReport: Report {
 
     
     func generateDocument() -> [PDFDocument] {

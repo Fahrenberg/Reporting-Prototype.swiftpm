@@ -78,22 +78,6 @@ struct TableReport: Report {
     }
 }
 
-extension TableReport {
-    static var mockReportRecords: [ReportRecord] {
-        return (0..<5).map { i in
-            let record = ReportRecord.mock
-            return ReportRecord(date: record.date,
-                                icon: record.icon,
-                                text: record.text + "-\(i+1)",
-                                amount: record.amount,
-                                scans: record.scans
-            )
-        }
-    }
-}
-
-
-
 fileprivate extension PDFTableRow {
     
     func formatContentRow(reportRecord: ReportRecord) {

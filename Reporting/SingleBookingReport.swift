@@ -24,6 +24,19 @@ struct SingleBookingReport: Report {
         font: SingleBookingFonts.digit
     )
     
+    // Scans
+    var scansSize: CGSize {
+        CGSize(width: document.layout.width
+               - document.layout.margin.left
+               - document.layout.margin.right,
+               height: document.layout.height 
+               - document.layout.margin.top 
+               - document.layout.margin.bottom
+               -  10 // Spacer before scans
+               - 200 // Report info & header
+        )
+    }
+    
     private var logo: PDFImage {
         guard let resizedImage = logoImage.resized(to: logoSize, alignment: .right)
         else { fatalError() }
@@ -104,28 +117,41 @@ struct SingleBookingReport: Report {
         document.addLineSeparator(PDFContainer.contentLeft, style: dividerLineStyle)
         document.add(space: 10.0)
     }
+    
     func addScans() {
-        // Scans
-        let scansSize = CGSize(width: document.layout.width
-                                      - document.layout.margin.left
-                                      - document.layout.margin.right,
-                              height: document.layout.height 
-                                       - document.layout.margin.top 
-                                       - document.layout.margin.bottom
-                                       -  10 // Spacer before scans
-                                       - 200 // Report info & header
-        )
         document.add(space: 10.0)
         
-        /// Four scans (2x2) per page, 5 point spacer between scans
-        let scanWidth = scansSize.width / 2 - 5
-        let scanHeight = scansSize.height / 2
-        let scanSize = CGSize(width: scanWidth, height: scanHeight)
+        switch reportRecord.scans.count {
+        case 0:
+            NoScan()
+        case 1:
+            OneScan()
+        default:
+            TwoByTwoScans()
+        }
+    }
+    
+    func NoScan() {
         
+    }
+    
+    func OneScan() {
+        
+    }
+
+    func TwoByTwoScans() {
+        /// Four scans (2x2) per page, 5 point spacer between scans
+        let spacer: Double = 5
+        let scanWidth = scansSize.width / 2 - spacer
+        let scanHeight = scansSize.height / 2
+        
+        
+        let scanSize = CGSize(width: scanWidth, height: scanHeight)
         let pdfImages: [PlatformImage] = reportRecord.scans.compactMap { data in
             guard let resizedImage = PlatformImage(data: data)?.resized(to: scanSize) else {return nil}
             return resizedImage.fillFrame().addFrame()
         }
+        
         let fourPDFImages = pdfImages.chunked(into: 4)
         let pageCount = fourPDFImages.count
         var currentPage = 1
@@ -142,7 +168,7 @@ struct SingleBookingReport: Report {
                 // When two images have been collected, add them as a row and reset the temporary array.
                 if pdfImagesRow.count == 2 {
                     imageGroup.add(.left, imagesInRow: pdfImagesRow)
-                    imageGroup.add(space: 5)
+                    imageGroup.add(space: spacer)
                     pdfImagesRow.removeAll()
                 }
             }
@@ -159,7 +185,6 @@ struct SingleBookingReport: Report {
                 addHeader()
                 addReducedReportInfo(scanPage: currentPage, allScanPages: pageCount)
             }
-            
         }
     }
 }

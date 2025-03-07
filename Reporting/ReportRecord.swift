@@ -27,7 +27,7 @@ struct ReportRecord {
             icon: "truck.box",
             text: "Mock Report Record",
             amount: Double.random(in: 1000.0 ... 10000.00),
-            scans: Array(allImageData().shuffled().prefix(5)) // Randomly select 5 images
+            scans: Array(allImageData().prefix(5)) // Randomly select 5 images
         )
     }
 }

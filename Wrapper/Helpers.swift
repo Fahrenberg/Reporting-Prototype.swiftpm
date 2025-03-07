@@ -20,19 +20,15 @@ public func imageData(filename: String = "0A0BFAFA-90DD-40D4-97A3-E6FDA59128C2")
     let bundle = Bundle.main
     guard let imageURL = bundle.url(forResource: filename, withExtension: "png")
             else { 
-        print("image not found: \(filename)")
         return Data() }
-    print("imagaData: \(filename): \(imageURL.absoluteString)")
     return try! Data(contentsOf: imageURL)
 }
 public func allImageFilenames() -> [String] {
     let bundle = Bundle.main
-
-    // Explicitly search in "Resources/Scans"
     guard let allImagesURL = bundle.urls(forResourcesWithExtension: "png", subdirectory: nil) else { return [] }
     return allImagesURL
         .map { $0.deletingPathExtension().lastPathComponent }
-        .filter { !$0.contains("AppIcon") } // Exclude AppIcon
+        .filter { !$0.contains("AppIcon") } // Exclude AppIcon, Swift Playground flattens Resources files
 }
 
 

@@ -125,9 +125,7 @@ struct SingleBookingReport: Report {
         let pdfImages: [PlatformImage] = reportRecord.scans.compactMap { data in
             guard let resizedImage = PlatformImage(data: data)?.resized(to: scanSize) else {return nil}
             return resizedImage.fillFrame().addFrame()
-        }.dropLast()
-        
-
+        }
         let fourPDFImages = pdfImages.chunked(into: 4)
         let pageCount = fourPDFImages.count
         var currentPage = 1

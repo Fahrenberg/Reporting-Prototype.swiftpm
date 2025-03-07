@@ -21,7 +21,7 @@ struct ReportRecord {
     let scans: [Data]
     var cashFlow: String { amount >=  0 ? "Einzahlung" : "Auszahlung" }
     
-    static var mockReportRecord: ReportRecord {
+    static var mock: ReportRecord {
         ReportRecord(
             date: Date().addingTimeInterval(Double.random(in: -1_000_000_000 ... 0)),
             icon: "truck.box",
@@ -29,5 +29,16 @@ struct ReportRecord {
             amount: Double.random(in: 1000.0 ... 10000.00),
             scans: Array(allImageData().shuffled().prefix(5)) // Randomly select 5 images
         )
+    }
+}
+
+struct ReportRecords {
+    static func mocks(count: Int = 5) -> [ReportRecord] {
+        var reportRecords: [ReportRecord] = []
+        for i in 0...count {
+            let reportRecord = ReportRecord.mock
+            reportRecords.append( reportRecord )
+        }
+        return reportRecords
     }
 }

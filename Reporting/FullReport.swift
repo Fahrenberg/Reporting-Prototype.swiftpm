@@ -18,7 +18,7 @@ struct FullReport: Report {
 
     
     func generateDocument() -> [PDFDocument] {
-        let reportRecords = TableReport.mockReportRecords
+        let reportRecords = ReportRecords.mocks()
         let table = TableReport(reportRecords: reportRecords)
         var document = table.generateDocument()
         

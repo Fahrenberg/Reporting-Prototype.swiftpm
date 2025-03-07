@@ -21,7 +21,7 @@ struct ContentView: View {
             Picker("Report Type", selection: $reportType) {
                 Text("SingleBookingReport").tag(ReportType.SingleBookingReport)
                 Text("PlaygroundReport").tag(ReportType.PlaygroundReport)
-                Text("MultipleLargeImageReport").tag(ReportType.MultipleLargeImageReport)
+                Text("FullReport").tag(ReportType.FullReport)
                 Text("TableReport").tag(ReportType.TableReport)
                 Text("ExternalPDF").tag(ReportType.PDFFile)
             }
@@ -34,16 +34,16 @@ struct ContentView: View {
     // Example function to load PDF data
     private func loadSamplePDF(reportType: ReportType) {
         pdfData = Data()
-        var report: Report = SingleBookingReport(reportRecord: ReportRecord.mockReportRecord)
+        var report: Report = SingleBookingReport(reportRecord: ReportRecord.mock)
         switch reportType {
         case .SingleBookingReport:
-            report =  SingleBookingReport(reportRecord: ReportRecord.mockReportRecord)
+            report =  SingleBookingReport(reportRecord: ReportRecord.mock)
         case .PlaygroundReport:
             report = PlaygroundReport()
-        case .MultipleLargeImageReport:
-            report = MultipleLargeImageReport()
+        case .FullReport:
+            report = FullReport()
         case .TableReport:
-            report = TableReport(reportRecords: TableReport.mockReportRecords)
+            report = TableReport(reportRecords: ReportRecords.mocks() )
         case .PDFFile:
             report = ExternalPDF()
         }
@@ -98,7 +98,7 @@ struct PDFKitView: UIViewRepresentable {
 enum ReportType {
     case SingleBookingReport
     case PlaygroundReport
-    case MultipleLargeImageReport
+    case FullReport
     case TableReport
     case PDFFile
 }

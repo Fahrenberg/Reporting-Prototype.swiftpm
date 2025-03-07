@@ -34,10 +34,10 @@ struct ContentView: View {
     // Example function to load PDF data
     private func loadSamplePDF(reportType: ReportType) {
         pdfData = Data()
-        var report: Report = SingleBookingReport(reportRecord: ReportRecord.mock)
+        var report: Report?
         switch reportType {
         case .SingleBookingReport:
-            report =  SingleBookingReport(reportRecord: ReportRecord.mock)
+            report =  SingleBookingReport(reportRecord: ReportRecord.mock())
         case .PlaygroundReport:
             report = PlaygroundReport()
         case .FullReport:
@@ -47,7 +47,7 @@ struct ContentView: View {
         case .PDFFile:
             report = ExternalPDF()
         }
-        guard let data = report.data() 
+        guard let data = report?.data() 
         else { 
             Logger.source.error("Cannot create report!")
             print("Cannot create report!")

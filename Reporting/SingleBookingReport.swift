@@ -132,11 +132,11 @@ struct SingleBookingReport: Report {
     }
     
     func NoScan() {
-        
+        document.add(text: "No Scan")
     }
     
     func OneScan() {
-        
+         document.add(text: "One Scan")
     }
 
     func TwoByTwoScans() {

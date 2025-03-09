@@ -20,10 +20,9 @@ struct ContentView: View {
             Spacer()
             Picker("Report Type", selection: $reportType) {
                 Text("SingleBookingReport").tag(ReportType.SingleBookingReport)
-                Text("PlaygroundReport").tag(ReportType.PlaygroundReport)
-                Text("FullReport").tag(ReportType.FullReport)
                 Text("TableReport").tag(ReportType.TableReport)
-                Text("ExternalPDF").tag(ReportType.PDFFile)
+                Text("FullReport").tag(ReportType.FullReport)
+                Text("PlaygroundReport").tag(ReportType.PlaygroundReport)
             }
             .padding(.top, 5)
         }
@@ -37,7 +36,7 @@ struct ContentView: View {
         var report: Report?
         switch reportType {
         case .SingleBookingReport:
-            report =  SingleBookingReport(reportRecord: ReportRecord.mock())
+            report =  SingleBookingReport(reportRecord: ReportRecord.mock(scanCount: 0))
         case .PlaygroundReport:
             report = PlaygroundReport()
         case .FullReport:
@@ -64,6 +63,7 @@ struct ContentView: View {
            case cannotWrite
         }
         do {
+            return
             let directory = try PlatformImage.tempDirectory()
             let file = directory.appending(path: "report.pdf")
             let sucess = pdfDocument.write(to: file)

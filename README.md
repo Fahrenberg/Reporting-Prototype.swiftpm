@@ -2,7 +2,7 @@
 
 ---------------
 
-Evaluating the [TPPDF Library](https://github.com/techprimate/TPPDF) to generate account reports in RuKa (Kassensaldo)
+Evaluating the [TPPDF Library](https://github.com/techprimate/TPPDF) to generate account reports in RuKa (Kassensaldo). Either single ReportRecord or all ReportRecords.
 
 - [Documentation TPPDF](https://github.com/techprimate/TPPDF/blob/main/Documentation/Usage.md)
 

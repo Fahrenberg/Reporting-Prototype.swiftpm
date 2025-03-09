@@ -132,13 +132,14 @@ struct SingleBookingReport: Report {
     }
     
     func NoScan() {
-        let topSpacer: CGFloat =  100
-        document.add(.contentCenter ,space: topSpacer)
-        guard let noScanSymbol = Image(named: "NoScan")
+        guard let noScanSymbol = Image(named: "NoSca8n")
         else {
-            document.add(text: "No Scan") 
+            let topSpacer = scansSize.height / 2
+            document.add(.contentCenter ,space: topSpacer)
+            document.add(.contentCenter, text: "No Scans") 
             return
         }
+        document.add(.contentCenter ,space: 100)
         document.add(.contentCenter, image: PDFImage(image: noScanSymbol))
     }
     

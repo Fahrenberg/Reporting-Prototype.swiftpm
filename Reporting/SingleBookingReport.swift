@@ -69,8 +69,8 @@ struct SingleBookingReport: Report {
     }
     
     func generateDocument() -> [PDFDocument] {
-        print("PDFDocument \(document.debugDescription)")
-        Logger.source.info("PDFDocument: \(document.debugDescription) ")
+//        print("PDFDocument \(document.debugDescription)")
+//        Logger.source.info("PDFDocument: \(document.debugDescription) ")
         addHeader()
         addFullReportInfo()
         addScans()
@@ -132,11 +132,20 @@ struct SingleBookingReport: Report {
     }
     
     func NoScan() {
-        document.add(text: "No Scan")
+        let topSpacer: CGFloat =  100
+        document.add(.contentCenter ,space: topSpacer)
+        guard let noScanSymbol = Image(named: "NoScan")
+        else {
+            document.add(text: "No Scan") 
+            return
+        }
+        document.add(.contentCenter, image: PDFImage(image: noScanSymbol))
     }
     
     func OneScan() {
-         document.add(text: "One Scan")
+        let topSpacer = scansSize.height / 2 - 20
+        document.add(.contentCenter ,space: topSpacer)
+        document.add(.contentCenter ,text: "One Scan")
     }
 
     func TwoByTwoScans() {

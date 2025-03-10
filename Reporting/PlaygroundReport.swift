@@ -19,13 +19,12 @@ struct PlaygroundReport: Report {
                height: document.layout.height
                - document.layout.margin.top
                - document.layout.margin.bottom
-               -  10 // Spacer before scans
-               - 200 // Report info & header
+               
         )
     }
     
     private var logo: PDFImage {
-        let logoSize = CGSize(width: 150, height: 47)
+        let logoSize = CGSize(width: 250, height: 47)
         guard let resizedImage = logoImage.resized(to: logoSize, alignment: .right)
         else { fatalError() }
         let finalImage = resizedImage.fillFrame(frameColor: .white).addFrame(frameColor: .lightGray)
@@ -60,22 +59,24 @@ struct PlaygroundReport: Report {
         let shape = PDFDynamicGeometryShape(
             path: path, 
             fillColor: .clear,
-            stroke: .init(type: .full, color: .green, width: 2.0, radius: 0)
+            stroke: .init(type: .full, color: .brown, width: 5.0, radius: 0)
         )
         
         // Create the group object and set the background color and shape
-        let group = PDFGroup(allowsBreaks: false,
+        let group = PDFGroup(allowsBreaks: true,
                              backgroundColor: .none,
-                             backgroundShape: shape
+                             backgroundShape: shape,
+                             padding: EdgeInsets(top: 0, left: 10, bottom: 10, right: 10)
         ) 
         return group
     }
     
     func generateDocument() -> [PDFDocument] {
-        let group = redRectangle(size: CGSize(width: 200, height: 300))
-        group.add(space: 50)
-        group.set(indentation: 30, left: true)
-        group.add(image: logo)
+        let group = redRectangle(size: scansSize)
+        
+        for _ in 0..<20 { 
+            group.add(image: logo)
+        }
         document.add(group: group)
         
         return [document]

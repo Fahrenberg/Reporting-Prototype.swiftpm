@@ -32,7 +32,7 @@ extension Report {
         guard let generator = generator else { // Use the generator safely
             return nil
         }
-        generator.debug = true
+//        generator.debug = true
         do {
             let data = try generator.generateData()
             return data

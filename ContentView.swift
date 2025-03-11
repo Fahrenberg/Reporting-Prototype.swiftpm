@@ -7,6 +7,7 @@ struct ContentView: View {
     // pdfData is now a @State variable
     @State private var pdfData: Data = Data() // Initialize with an empty Data object
     @State private var reportType: ReportType = .PlaygroundReport
+    @State private var debugFrame = false
     var body: some View {
         VStack {
             if let pdfDocument = PDFDocument(data: pdfData), !pdfData.isEmpty {
@@ -18,15 +19,25 @@ struct ContentView: View {
                 Spacer()
             }
             Spacer()
-            Picker("Report Type", selection: $reportType) {
-                Text("SingleBookingReport").tag(ReportType.SingleBookingReport)
-                Text("TableReport").tag(ReportType.TableReport)
-                Text("FullReport").tag(ReportType.FullReport)
-                Text("PlaygroundReport").tag(ReportType.PlaygroundReport)
+            VStack {
+                Picker("Report Type", selection: $reportType) {
+                    Text("SingleBookingReport").tag(ReportType.SingleBookingReport)
+                    Text("TableReport").tag(ReportType.TableReport)
+                    Text("FullReport").tag(ReportType.FullReport)
+                    Text("PlaygroundReport").tag(ReportType.PlaygroundReport)
+                }
+                HStack {
+                    Text("Show Debug Frame")
+                    Toggle("Show Debug Frame", isOn: $debugFrame)
+                        .labelsHidden()
+                }
+                .frame(maxWidth: .infinity, alignment: .center) // Ensures centering
+                .padding(.bottom, 5)
             }
-            .padding(.top, 5)
+            .frame(maxWidth: .infinity) // Ensures VStack takes full width
         }
         .onChange(of: reportType) { loadSamplePDF(reportType: reportType) }
+        .onChange(of: debugFrame) { loadSamplePDF(reportType: reportType) }
         .onAppear { loadSamplePDF(reportType: reportType) }
     }
     
@@ -46,7 +57,7 @@ struct ContentView: View {
         case .PDFFile:
             report = ExternalPDF()
         }
-        guard let data = report?.data() 
+        guard let data = report?.data(debugFrame: debugFrame)
         else { 
             Logger.source.error("Cannot create report!")
             print("Cannot create report!")

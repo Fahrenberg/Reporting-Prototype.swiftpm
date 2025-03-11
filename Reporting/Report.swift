@@ -14,7 +14,7 @@ protocol Report {
 
 extension Report {
     /// Create Data from PDF Document 
-    func data() -> Data? {
+    func data(debugFrame: Bool = false) -> Data? {
         let pdfDocuments = generateDocument()
         let generator: PDFGeneratorProtocol?  // Define generator variable outside switch
         
@@ -32,7 +32,7 @@ extension Report {
         guard let generator = generator else { // Use the generator safely
             return nil
         }
-//        generator.debug = true
+        generator.debug = debugFrame
         do {
             let data = try generator.generateData()
             return data

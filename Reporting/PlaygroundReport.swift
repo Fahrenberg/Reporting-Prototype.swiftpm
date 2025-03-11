@@ -13,13 +13,17 @@ struct PlaygroundReport: Report {
     private let document = PDFDocument(format: .a4)
     // Scans
     var scansSize: CGSize {
-        CGSize(width: document.layout.width
-               - document.layout.margin.left
-               - document.layout.margin.right,
-               height: document.layout.height
-               - document.layout.margin.top
-               - document.layout.margin.bottom
-               
+        let documentContentWidth = document.layout.width
+        - document.layout.margin.left
+        - document.layout.margin.right
+        
+//        let documentContentHeight =  document.layout.height
+//        - document.layout.margin.top
+//        - document.layout.margin.bottom
+        
+        return CGSize(
+            width: documentContentWidth,
+            height: 275
         )
     }
     
@@ -31,54 +35,39 @@ struct PlaygroundReport: Report {
         return PDFImage(image: finalImage, options: [.none])
     }
     
-    private func redRectangle(size: CGSize) -> PDFGroup {
-        let path = PDFBezierPath(ref: CGRect(origin: .zero, size: size))
-        path.move(to: PDFBezierPathVertex(
-            position: CGPoint.zero,
-            anchor: .topLeft)
-        )
-        path.addLine(to: PDFBezierPathVertex(
-            position: CGPoint(x: size.width, y: 0), 
-            anchor: .topLeft)
-        )
-        path.addLine(to: PDFBezierPathVertex(
-            position: CGPoint(x: size.width, y: size.height),
-            anchor: .topLeft)
-        )
-        path.addLine(to: PDFBezierPathVertex(
-            position: CGPoint(x: 0, y: size.height),
-            anchor: .topLeft)
-        )
-        path.addLine(to: PDFBezierPathVertex(
-            position: CGPoint(x: 0, y: 0), 
-            anchor: .topLeft)
-        )
-        
-        path.close()
-        
-        let shape = PDFDynamicGeometryShape(
-            path: path, 
-            fillColor: .clear,
-            stroke: .init(type: .full, color: .brown, width: 5.0, radius: 0)
-        )
-        
-        // Create the group object and set default values
-        let group = PDFGroup(allowsBreaks: true,
-                             backgroundColor: .none,
-                             backgroundShape: shape,
-                             padding: EdgeInsets(top: 0, left: 10, bottom: 10, right: 10)
-        ) 
-        return group
-    }
-    
+    private let lineStyle = PDFLineStyle(type: .full, color: .purple, width: 1.0)
+   
     func generateDocument() -> [PDFDocument] {
-        let group = redRectangle(size: scansSize)
+        let groupBorder = PDFGroup(
+            allowsBreaks: true,
+            backgroundColor: .clear, 
+            outline: lineStyle, 
+            padding: EdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+        )
+            .addBorderShapeRectangle(size: scansSize, color: .blue)
         
-        for _ in 0..<20 { 
-            group.add(image: logo)
+        for _ in 0..<5 { 
+            groupBorder.add(image: logo)
         }
-        document.add(group: group)
+        document.add(group: groupBorder)
+        document.add(space: 50)
         
+        document.add(text: "--- second start ---- ")
+
+        let groupOutline = PDFGroup(
+            allowsBreaks: true,
+            backgroundColor: .clear, 
+            outline: lineStyle,
+            padding: EdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+        )
+            .addBorderShapeRectangle(size: scansSize, color: .blue)
+        
+        for _ in 0..<5 { 
+            groupOutline.add(image: logo)
+        }
+        document.add(group: groupOutline)
+        document.add(space: 10)
+        document.add(text: "--- second finished ---- ")
         return [document]
     }
 }

@@ -1,19 +1,14 @@
 //
-//  PDFRectangleGroup.swift
-//  Extenstion
+//  PDFGroup Extensions
 //  Reporting-Prototype
-//
-//  Created by Jean-Nicolas on 11.03.2025.
 //
 
 import TPPDF
 import UIKit
 
-
-
-
 extension PDFGroup {
-    static func withRectangleBorder(size: CGSize, color: UIColor) -> PDFGroup {
+    /// Adding a rectangle stroke to PDFGroup, anchor is topLeft
+    func addBorderShapeRectangle(size: CGSize, color: UIColor) -> PDFGroup {
         let path = PDFBezierPath(ref: CGRect(origin: .zero, size: size))
         path.move(to: PDFBezierPathVertex(
             position: CGPoint.zero,
@@ -41,14 +36,15 @@ extension PDFGroup {
         let shape = PDFDynamicGeometryShape(
             path: path,
             fillColor: .clear,
-            stroke: .init(type: .full, color: .brown, width: 5.0, radius: 0)
+            stroke: .init(type: .full, color: color, width: 2.0, radius: 0)
         )
         
         // Create the group object and set default values
-        let group = PDFGroup(allowsBreaks: true,
-                             backgroundColor: .none,
+        let group = PDFGroup(allowsBreaks: self.allowsBreaks,
+                             backgroundColor: self.backgroundColor,
                              backgroundShape: shape,
-                             padding: EdgeInsets(top: 0, left: 10, bottom: 10, right: 10)
+                             outline: self.outline,
+                             padding: self.padding
         )
         return group
     }

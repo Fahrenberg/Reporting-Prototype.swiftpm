@@ -62,7 +62,7 @@ struct PlaygroundReport: Report {
             stroke: .init(type: .full, color: .brown, width: 5.0, radius: 0)
         )
         
-        // Create the group object and set the background color and shape
+        // Create the group object and set default values
         let group = PDFGroup(allowsBreaks: true,
                              backgroundColor: .none,
                              backgroundShape: shape,

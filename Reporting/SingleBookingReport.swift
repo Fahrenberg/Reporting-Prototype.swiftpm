@@ -69,9 +69,9 @@ struct SingleBookingReport: Report {
     }
     
     func addReport(to document: PDFDocument) {
-        addHeader(document: document)
-        addFullReportInfo(document: document)
-        addScans(document: document)
+        addHeader(to: document)
+        addFullReportInfo(to: document)
+        addScans(to: document)
 
     }
     
@@ -90,13 +90,13 @@ struct SingleBookingReport: Report {
 
         return [document]
     }
-    func addHeader(document: PDFDocument) {
+    func addHeader(to document: PDFDocument) {
         // Logo Header
         document.add(.contentRight, image: logo)
         document.add(space: 20.0)
     }
     
-    func addFullReportInfo(document: PDFDocument) {
+    func addFullReportInfo(to document: PDFDocument) {
         document.addLineSeparator(PDFContainer.contentLeft, style: dividerLineStyle)
         document.add(space: 5.0)
         // Add booking information as table
@@ -123,7 +123,7 @@ struct SingleBookingReport: Report {
         
     }
     
-    func addReducedReportInfo(document: PDFDocument, scanPage: Int, allScanPages: Int) {
+    func addReducedReportInfo(to document: PDFDocument, scanPage: Int, allScanPages: Int) {
         document.addLineSeparator(PDFContainer.contentLeft, style: dividerLineStyle)
         document.add(.contentLeft, text: "\(reportRecord.text) (\(scanPage)/\(allScanPages))")
         document.add(space: 50.0)
@@ -131,7 +131,7 @@ struct SingleBookingReport: Report {
         document.add(space: 10.0)
     }
     
-    func addScans(document: PDFDocument) {
+    func addScans(to document: PDFDocument) {
         document.add(space: 10.0)
         
         switch reportRecord.scans.count {
@@ -206,8 +206,8 @@ struct SingleBookingReport: Report {
             currentPage += 1
             if currentPage <= pageCount {
                 document.createNewPage()
-                addHeader(document: document)
-                addReducedReportInfo(document: document, scanPage: currentPage, allScanPages: pageCount)
+                addHeader(to: document)
+                addReducedReportInfo(to: document, scanPage: currentPage, allScanPages: pageCount)
             }
         }
     }

@@ -24,9 +24,9 @@ struct TableReport: Report {
         let table = PDFTable(rows: reportRecords.count + 2, columns: 4) // Records + 1 Header + 1 Footer
         table.style = PDFTableStyle() // set to default
         table.padding = 2.0
-        addTableHeaderRow(table: table)
-        addTableContent(table: table)
-        addTotalRow(table: table)
+        addTableHeaderRow(to: table)
+        addTableContent(to: table)
+        addTotalRow(to: table)
         document.add(table: table)
     }
     
@@ -64,7 +64,7 @@ struct TableReport: Report {
     }
     
     
-    func addTableHeaderRow(table: PDFTable) {
+    func addTableHeaderRow(to table: PDFTable) {
         table.showHeadersOnEveryPage = true
         table.style.rowHeaderCount = 1
         table[row:0].formatHeaderRow()
@@ -78,7 +78,7 @@ struct TableReport: Report {
     /// - ```table``` is a var by reference (inout)
     /// - Calculates sum of amount for all records
     ///
-    func addTotalRow(table: PDFTable)  {
+    func addTotalRow(to table: PDFTable)  {
         table.style.footerCount = 1 // needed?
         let lastRowIndex = table.size.rows - 1 //table.style.footerCount // zero based
         let totalRow = table[row: lastRowIndex]
@@ -91,7 +91,7 @@ struct TableReport: Report {
     ///
     /// - ```table``` is a var by reference (inout)
     /// - Table must have enough rows to add each record
-    func addTableContent(table: PDFTable) {
+    func addTableContent(to table: PDFTable) {
         guard reportRecords.count == table.size.rows - 2 else { return } // table content rows = reportRecords - 1 header line - 1 footer row, else wrong table size
         // Table Content
         reportRecords.enumerated().forEach { index, reportRecord in

@@ -6,7 +6,7 @@ import Extensions
 struct ContentView: View {
     // pdfData is now a @State variable
     @State private var pdfData: Data = Data() // Initialize with an empty Data object
-    @State private var reportType: ReportType = .PlaygroundReport
+    @State private var reportType: ReportType = .TableReport
     @State private var debugFrame = false
     var body: some View {
         VStack {
@@ -47,7 +47,7 @@ struct ContentView: View {
         var report: Report?
         switch reportType {
         case .SingleBookingReport:
-            report =  SingleBookingReport(reportRecord: ReportRecord.mock(scanCount: 0))
+            report =  SingleBookingReport(reportRecord: ReportRecord.mock(scanCount: 4))
         case .PlaygroundReport:
             report = PlaygroundReport()
         case .FullReport:
@@ -70,20 +70,21 @@ struct ContentView: View {
     }
     
     private func save(pdfDocument: PDFDocument) {
-        enum saveError: Error {
-           case cannotWrite
-        }
-        do {
-            return
-            let directory = try PlatformImage.tempDirectory()
-            let file = directory.appending(path: "report.pdf")
-            let sucess = pdfDocument.write(to: file)
-            if !sucess { throw saveError.cannotWrite}
-            print(file.absoluteString)
-        }
-            catch {
-                print("Cannot save PDFDocument \(error.localizedDescription)")
-            }
+        
+        return  // no saving to disk
+//        enum saveError: Error {
+//           case cannotWrite
+//        }
+//        do {
+//            let directory = try PlatformImage.tempDirectory()
+//            let file = directory.appending(path: "report.pdf")
+//            let sucess = pdfDocument.write(to: file)
+//            if !sucess { throw saveError.cannotWrite}
+//            print(file.absoluteString)
+//        }
+//            catch {
+//                print("Cannot save PDFDocument \(error.localizedDescription)")
+//            }
     }
 }
 

@@ -37,7 +37,18 @@ struct PlaygroundReport: Report {
     
     private let lineStyle = PDFLineStyle(type: .full, color: .purple, width: 1.0)
    
+    func addReport(to document: PDFDocument) {
+        
+    } 
+    
     func generateDocument() -> [PDFDocument] {
+        // Pagination
+        document.add(.footerRight, text: "Date")
+        let pagination = PDFPagination(container: .footerCenter)
+        document.pagination = pagination
+        //
+        
+        
         let groupBorder = PDFGroup(
             allowsBreaks: true,
             backgroundColor: .clear, 
@@ -49,9 +60,13 @@ struct PlaygroundReport: Report {
         for _ in 0..<5 { 
             groupBorder.add(image: logo)
         }
+        document.add(text: "--- first start ---- ")
         document.add(group: groupBorder)
         document.add(space: 50)
+                document.add(text: "--- first end ---- ")
         
+        
+        document.createNewPage()
         document.add(text: "--- second start ---- ")
 
         let groupOutline = PDFGroup(
@@ -68,6 +83,26 @@ struct PlaygroundReport: Report {
         document.add(group: groupOutline)
         document.add(space: 10)
         document.add(text: "--- second finished ---- ")
+        
+        
+        document.createNewPage()
+        document.add(text: "--- thrid start ---- ")
+        
+        let group = PDFGroup(
+            allowsBreaks: true,
+            backgroundColor: .clear, 
+            outline: lineStyle,
+            padding: EdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
+        )
+            .addBorderShapeRectangle(size: scansSize, color: .blue)
+        
+        for _ in 0..<5 { 
+            group.add(image: logo)
+        }
+        document.add(group: group)
+        document.add(space: 10)
+        document.add(text: "--- thrid finished ---- ")
+        
         return [document]
     }
 }

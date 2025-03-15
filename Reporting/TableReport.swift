@@ -16,6 +16,53 @@ import AppKit
 struct TableReport: Report {
     let reportRecords: [ReportRecord]
     
+    func addReport(to document: PDFDocument) {
+
+        addPageHeader(to: document)
+        
+        // Add Record Table
+        let table = PDFTable(rows: reportRecords.count + 2, columns: 4) // Records + 1 Header + 1 Footer
+        table.style = PDFTableStyle() // set to default
+        table.padding = 2.0
+        addTableHeaderRow(table: table)
+        addTableContent(table: table)
+        addTotalRow(table: table)
+        document.add(table: table)
+    }
+    
+    func generateDocument() -> [PDFDocument] {
+        let document = PDFDocument(format: .a4)
+        document.background.color = .white
+        
+        addFooter(to: document)
+        addReport(to: document)
+        
+        return [document]
+    }
+    
+    private let logoSize = CGSize(width: 300, height: 70)
+    private let dividerLineStyle = PDFLineStyle(type: .full, color: .darkGray, width: 0.5)
+    
+    private var logo: PDFImage {
+        guard let resizedImage = logoImage.resized(to: logoSize, alignment: .right)
+        else { fatalError() }
+        let finalImage = resizedImage.fillFrame(frameColor: .white).addFrame(frameColor: .systemGray6)
+        return PDFImage(image: finalImage, options: [.none])
+    }
+    
+    private func addPageHeader(to document: PDFDocument) {
+        // Logo Header
+        document.add(.contentRight, image: logo)
+        document.add(space: 20.0)
+        document.addLineSeparator(PDFContainer.contentLeft, style: dividerLineStyle)
+        // Title
+        document.add(space: 10.0)
+        document.set(.contentLeft, textColor: .black)
+        document.set(.contentLeft, font: TableFonts.title)
+        document.add(.contentLeft, text: "Kontoauszug")
+        document.add(space: 40.0)
+    }
+    
     
     func addTableHeaderRow(table: PDFTable) {
         table.showHeadersOnEveryPage = true
@@ -53,29 +100,39 @@ struct TableReport: Report {
         }
     }
     
-    
-    
-    func generateDocument() -> [PDFDocument] {
-        let document = PDFDocument(format: .a4)
-        document.background.color = .white
+    func addFooter(to document: PDFDocument) {
+        // Footer text right
+        document.addLineSeparator(.footerCenter, style: dividerLineStyle)
+        document.set(.footerRight, font: TableFonts.regular)
+        let date = Date()
+        // Use the .dateTime format and localize to German
+        let formattedDate = date.formatted(
+            .dateTime
+                .day(.twoDigits)
+                .month(.twoDigits)
+                .year(.defaultDigits)
+                .hour(.defaultDigits(amPM: .abbreviated))
+                .minute(.defaultDigits)
+        )
         
-        // Report Title
-        document.set(.contentCenter, textColor: .blue)
-        document.set(.contentCenter, font: TableFonts.title)
-        document.add(.contentCenter, text: "ReportRecord Table")
-        document.add(space: 10.0)
-        document.addLineSeparator(PDFContainer.contentLeft, style: TableLines.greyDivider)
+        let footerRightText = "Druckdatum: \(formattedDate)"
+        document.add(.footerRight, text: footerRightText)
         
-        // Add Record Table
-        let table = PDFTable(rows: reportRecords.count + 2, columns: 4) // Records + 1 Header + 1 Footer
-        table.style = PDFTableStyle() // set to default
-        table.padding = 2.0
-        addTableHeaderRow(table: table)
-        addTableContent(table: table)
-        addTotalRow(table: table)
-        document.add(table: table)
-        return [document]
+        // Pagination
+        let numberFormatter = NumberFormatter()
+        numberFormatter.numberStyle = .none
+        
+        let pagination = PDFPagination(
+            container: .footerCenter,
+            style: PDFPaginationStyle.customNumberFormat(template: "%@/%@",
+                                                         formatter: numberFormatter)
+        )
+        document.pagination = pagination
+        
     }
+   
+    
+    
 }
 
 fileprivate extension PDFTableRow {

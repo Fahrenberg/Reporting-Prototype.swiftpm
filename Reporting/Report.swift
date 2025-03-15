@@ -10,6 +10,7 @@ import OSLog
 
 protocol Report {
     func generateDocument() -> [PDFDocument]
+    func addReport(to document: PDFDocument)
 }
 
 extension Report {

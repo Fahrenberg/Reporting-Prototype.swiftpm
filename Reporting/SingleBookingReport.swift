@@ -12,7 +12,7 @@ import OSLog
 struct SingleBookingReport: Report {
     let reportRecord: ReportRecord
     
-    private let document = PDFDocument(format: .a4)
+   
     private let dividerLineStyle = PDFLineStyle(type: .full, color: .darkGray, width: 0.5)
     private let logoSize = CGSize(width: 300, height: 70)
     private let digitStyle = PDFTableCellStyle(font: SingleBookingFonts.digit)
@@ -25,7 +25,7 @@ struct SingleBookingReport: Report {
     )
     
     // Scans
-    var scansSize: CGSize {
+    func scansSize(document: PDFDocument) -> CGSize {
         CGSize(width: document.layout.width
                - document.layout.margin.left
                - document.layout.margin.right,
@@ -33,7 +33,7 @@ struct SingleBookingReport: Report {
                - document.layout.margin.top 
                - document.layout.margin.bottom
                -  10 // Spacer before scans
-               - 200 // Report info & header
+               - 220 // Report info & header
         )
     }
     
@@ -68,22 +68,35 @@ struct SingleBookingReport: Report {
         return finalImage
     }
     
+    func addReport(to document: PDFDocument) {
+        addHeader(document: document)
+        addFullReportInfo(document: document)
+        addScans(document: document)
+
+    }
+    
     func generateDocument() -> [PDFDocument] {
 //        print("PDFDocument \(document.debugDescription)")
 //        Logger.source.info("PDFDocument: \(document.debugDescription) ")
-        addHeader()
-        addFullReportInfo()
-        addScans()
+        let document = PDFDocument(format: .a4)
+        // Pagination
+        document.add(.footerRight, text: "SingleBookingReport")
+        let pagination = PDFPagination(container: .footerCenter)
+        document.pagination = pagination
+        //
+        
+        addReport(to: document)
+       
 
         return [document]
     }
-    func addHeader() {
+    func addHeader(document: PDFDocument) {
         // Logo Header
         document.add(.contentRight, image: logo)
         document.add(space: 20.0)
     }
     
-    func addFullReportInfo() {
+    func addFullReportInfo(document: PDFDocument) {
         document.addLineSeparator(PDFContainer.contentLeft, style: dividerLineStyle)
         document.add(space: 5.0)
         // Add booking information as table
@@ -110,7 +123,7 @@ struct SingleBookingReport: Report {
         
     }
     
-    func addReducedReportInfo(scanPage: Int, allScanPages: Int) {
+    func addReducedReportInfo(document: PDFDocument, scanPage: Int, allScanPages: Int) {
         document.addLineSeparator(PDFContainer.contentLeft, style: dividerLineStyle)
         document.add(.contentLeft, text: "\(reportRecord.text) (\(scanPage)/\(allScanPages))")
         document.add(space: 50.0)
@@ -118,23 +131,24 @@ struct SingleBookingReport: Report {
         document.add(space: 10.0)
     }
     
-    func addScans() {
+    func addScans(document: PDFDocument) {
         document.add(space: 10.0)
         
         switch reportRecord.scans.count {
         case 0:
-            NoScan()
+            NoScan(document: document)
         case 1:
-            OneScan()
+            OneScan(document: document)
+
         default:
-            TwoByTwoScans()
+            TwoByTwoScans(document: document)
         }
     }
     
-    func NoScan() {
+    func NoScan(document: PDFDocument) {
         guard let noScanSymbol = Image(named: "NoSca8n")
         else {
-            let topSpacer = scansSize.height / 2
+            let topSpacer = scansSize(document: document).height / 2
             document.add(.contentCenter ,space: topSpacer)
             document.add(.contentCenter, text: "No Scans") 
             return
@@ -143,17 +157,17 @@ struct SingleBookingReport: Report {
         document.add(.contentCenter, image: PDFImage(image: noScanSymbol))
     }
     
-    func OneScan() {
-        let topSpacer = scansSize.height / 2 - 20
+    func OneScan(document: PDFDocument) {
+        let topSpacer = scansSize(document: document).height / 2 - 20
         document.add(.contentCenter ,space: topSpacer)
         document.add(.contentCenter ,text: "One Scan")
     }
 
-    func TwoByTwoScans() {
+    func TwoByTwoScans(document: PDFDocument) {
         /// Four scans (2x2) per page, 5 point spacer between scans
         let spacer: Double = 5
-        let scanWidth = scansSize.width / 2 - spacer
-        let scanHeight = scansSize.height / 2
+        let scanWidth = scansSize(document: document).width / 2 - spacer
+        let scanHeight = scansSize(document: document).height / 2
         
         
         let scanSize = CGSize(width: scanWidth, height: scanHeight)
@@ -192,8 +206,8 @@ struct SingleBookingReport: Report {
             currentPage += 1
             if currentPage <= pageCount {
                 document.createNewPage()
-                addHeader()
-                addReducedReportInfo(scanPage: currentPage, allScanPages: pageCount)
+                addHeader(document: document)
+                addReducedReportInfo(document: document, scanPage: currentPage, allScanPages: pageCount)
             }
         }
     }

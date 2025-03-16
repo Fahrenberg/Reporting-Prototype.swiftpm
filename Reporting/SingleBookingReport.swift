@@ -83,7 +83,7 @@ public struct SingleBookingReport: Report {
     }
     
     private func addFullReportInfo(to document: PDFDocument) {
-        document.addLineSeparator(PDFContainer.contentLeft, style: dividerLineStyle)
+        document.addLineSeparator(PDFContainer.contentLeft, style: ReportStyle.dividerLine)
         document.add(space: 5.0)
         // Add booking information as table
         let row1Table = PDFTable(rows: 1, columns: 2)
@@ -105,15 +105,15 @@ public struct SingleBookingReport: Report {
         document.add(table: row2Table)
         
         document.add(space: 5.0)
-        document.addLineSeparator(PDFContainer.contentLeft, style: dividerLineStyle)
+        document.addLineSeparator(PDFContainer.contentLeft, style: ReportStyle.dividerLine)
         
     }
     
     private func addReducedReportInfo(to document: PDFDocument, scanPage: Int, allScanPages: Int) {
-        document.addLineSeparator(PDFContainer.contentLeft, style: dividerLineStyle)
+        document.addLineSeparator(PDFContainer.contentLeft, style: ReportStyle.dividerLine)
         document.add(.contentLeft, text: "\(reportRecord.text) (\(scanPage)/\(allScanPages))")
         document.add(space: 50.0)
-        document.addLineSeparator(PDFContainer.contentLeft, style: dividerLineStyle)
+        document.addLineSeparator(PDFContainer.contentLeft, style: ReportStyle.dividerLine)
         document.add(space: 10.0)
     }
     

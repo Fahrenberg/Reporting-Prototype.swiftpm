@@ -21,25 +21,9 @@ public protocol Report {
     /// and ensure correct pagination
     func addReport(to document: PDFDocument)
 }
-
 extension Report {
-    /// Generates a instance of PDFDocument with basic layout definition
-    func generateDocument() -> [PDFDocument] {
-        let document = PDFDocument(format: paperSize)
-        if landscape {
-            document.layout.size = PDFPageFormat.a4.landscapeSize
-        }
-        document.background.color = .white
-        addReport(to: document)
-        return [document]
-    }
-    
-    var dividerLineStyle: PDFLineStyle { PDFLineStyle(type: .full, color: .darkGray, width: 0.5) }
-    
-    
-    
     /// Create Data from PDF Document
-    public  func data(debugFrame: Bool = false) -> Data? {
+    public func data(debugFrame: Bool = false) -> Data? {
         let pdfDocuments = generateDocument()
         let generator: PDFGeneratorProtocol?  // Define generator variable outside switch
         
@@ -65,8 +49,6 @@ extension Report {
             return nil
         }
     }
-
-
     
     /// Write PDF Document with default filename to module temporary  directory
     public func write() -> URL? {
@@ -75,7 +57,19 @@ extension Report {
         }
         return data.write(ext: "pdf")
     }
+    
+    /// Generates a instance of PDFDocument with basic layout definition
+    func generateDocument() -> [PDFDocument] {
+        let document = PDFDocument(format: paperSize)
+        if landscape {
+            document.layout.size = PDFPageFormat.a4.landscapeSize
+        }
+        document.background.color = .white
+        addReport(to: document)
+        return [document]
+    }
 }
+
 // Internal Extensions
 
 fileprivate extension Data {

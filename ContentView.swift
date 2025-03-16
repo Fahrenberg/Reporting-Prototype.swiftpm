@@ -26,6 +26,7 @@ struct ContentView: View {
                     Text("TableReport").tag(ReportType.TableReport)
                     Text("FullReport").tag(ReportType.FullReport)
                     Text("PlaygroundReport").tag(ReportType.PlaygroundReport)
+                    Text("ExternalPDF").tag(ReportType.ExternalPDF)
                 }
                 HStack {
                     Text("Show Debug Frame")
@@ -55,6 +56,8 @@ struct ContentView: View {
             report = FullReport()
         case .TableReport:
             report = TableReport(reportRecords: ReportRecords.mocks() )
+        case .ExternalPDF:
+            report = ExternalPDF()
         }
         guard let data = report?.data(debugFrame: debugFrame)
         else { 
@@ -111,4 +114,5 @@ enum ReportType {
     case PlaygroundReport
     case FullReport
     case TableReport
+    case ExternalPDF
 }

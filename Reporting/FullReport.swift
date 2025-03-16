@@ -27,22 +27,9 @@ public struct FullReport: Report {
             document.createNewPage()
             SingleBookingReport(reportRecord: reportRecord).addReport(to: document)
         }
-        
-    }
-    
-    private let logoSize = CGSize(width: 300, height: 70)
-    
-    private var logo: PDFImage {
-        guard let resizedImage = logoImage.resized(to: logoSize, alignment: .right)
-        else { fatalError() }
-        let finalImage = resizedImage.fillFrame(frameColor: .white).addFrame(frameColor: .systemGray6)
-        return PDFImage(image: finalImage, options: [.none])
     }
     
     private func addPageHeader(to document: PDFDocument) {
-        // Logo Header
-        document.add(.contentRight, image: logo)
-        document.add(space: 20.0)
         document.addLineSeparator(PDFContainer.contentLeft, style: ReportStyle.dividerLine)
         // Title
         document.add(space: 10.0)

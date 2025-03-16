@@ -15,13 +15,11 @@ public struct SingleBookingReport: Report {
     public var landscape: Bool = false
     
     public func addReport(to document: PDFDocument) {
-        addHeader(to: document)
         addFullReportInfo(to: document)
         addScans(to: document)
 
     }
     
-    private let logoSize = CGSize(width: 300, height: 70)
     private let digitCellStyle = PDFTableCellStyle(font: ReportStyle.digit)
     private let boldTextCellStyle = PDFTableCellStyle(font: ReportStyle.bold)
     private let regularTextCellStyle = PDFTableCellStyle(font: ReportStyle.regular)
@@ -43,12 +41,6 @@ public struct SingleBookingReport: Report {
         )
     }
     
-    private var logo: PDFImage {
-        guard let resizedImage = logoImage.resized(to: logoSize, alignment: .right)
-        else { fatalError() }
-        let finalImage = resizedImage.fillFrame(frameColor: .white).addFrame(frameColor: .lightGray)
-        return PDFImage(image: finalImage, options: [.none])
-    }
     private var cashFlowFormatted: String {
             reportRecord.cashFlow
     }
@@ -72,13 +64,6 @@ public struct SingleBookingReport: Report {
         else { fatalError() }
         let finalImage = resizedImage.fillFrame(frameColor: .white).addFrame(frameColor: .lightGray)
         return finalImage
-    }
-    
-
-    private func addHeader(to document: PDFDocument) {
-        // Logo Header
-        document.add(.contentRight, image: logo)
-        document.add(space: 20.0)
     }
     
     private func addFullReportInfo(to document: PDFDocument) {
@@ -110,6 +95,7 @@ public struct SingleBookingReport: Report {
     
     private func addReducedReportInfo(to document: PDFDocument, scanPage: Int, allScanPages: Int) {
         document.addLineSeparator(PDFContainer.contentLeft, style: ReportStyle.dividerLine)
+        document.add(space: 5.0)
         document.set(font: ReportStyle.regular)
         document.add(.contentLeft, text: "\(reportRecord.text) (\(scanPage)/\(allScanPages))")
         document.add(space: 50.0)
@@ -192,7 +178,6 @@ public struct SingleBookingReport: Report {
             currentPage += 1
             if currentPage <= pageCount {
                 document.createNewPage()
-                addHeader(to: document)
                 addReducedReportInfo(to: document, scanPage: currentPage, allScanPages: pageCount)
             }
         }

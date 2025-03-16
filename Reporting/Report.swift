@@ -65,6 +65,7 @@ extension Report {
             document.layout.size = PDFPageFormat.a4.landscapeSize
         }
         document.background.color = .white
+        addHeader(to: document)
         addFooter(to: document)
         addReport(to: document)
         return [document]
@@ -72,6 +73,18 @@ extension Report {
 }
 
 extension Report {
+     func addHeader(to document: PDFDocument) {
+         let logoSize = CGSize(width: 300, height: 70)
+         var logo: PDFImage {
+             guard let resizedImage = logoImage.resized(to: logoSize, alignment: .right)
+             else { fatalError() }
+             let finalImage = resizedImage.fillFrame(frameColor: .white).addFrame(frameColor: .lightGray)
+             return PDFImage(image: finalImage, options: [.none])
+         }
+         // Logo Header
+         document.add(.headerRight, image: logo)
+     }
+    
     func addFooter(to document: PDFDocument) {
         // Footer text right
         document.addLineSeparator(.footerCenter, style: ReportStyle.dividerLine)

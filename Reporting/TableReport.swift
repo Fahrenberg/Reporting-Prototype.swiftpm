@@ -34,17 +34,7 @@ public struct TableReport: Report {
     private let logoSize = CGSize(width: 300, height: 70)
     private let dividerLineStyle = PDFLineStyle(type: .full, color: .darkGray, width: 0.5)
     
-    private var logo: PDFImage {
-        guard let resizedImage = logoImage.resized(to: logoSize, alignment: .right)
-        else { fatalError() }
-        let finalImage = resizedImage.fillFrame(frameColor: .white).addFrame(frameColor: .systemGray6)
-        return PDFImage(image: finalImage, options: [.none])
-    }
-    
     private func addPageHeader(to document: PDFDocument) {
-        // Logo Header
-        document.add(.contentRight, image: logo)
-        document.add(space: 20.0)
         document.addLineSeparator(PDFContainer.contentLeft, style: dividerLineStyle)
         // Title
         document.add(space: 10.0)

@@ -22,13 +22,13 @@ public struct SingleBookingReport: Report {
     }
     
     private let logoSize = CGSize(width: 300, height: 70)
-    private let digitStyle = PDFTableCellStyle(font: SingleBookingFonts.digit)
-    private let boldTextStyle = PDFTableCellStyle(font: SingleBookingFonts.bold)
-    private let textStyle = PDFTableCellStyle(font: SingleBookingFonts.regular)
+    private let digitCellStyle = PDFTableCellStyle(font: ReportStyle.digit)
+    private let boldTextCellStyle = PDFTableCellStyle(font: ReportStyle.bold)
+    private let regularTextCellStyle = PDFTableCellStyle(font: ReportStyle.regular)
 
     private let digitTableStyle = PDFTableCellStyle(
         borders: PDFTableCellBorders(top: PDFLineStyle(type: .full, color: .darkGray, width: 0.5)),
-        font: SingleBookingFonts.digit
+        font: ReportStyle.digit
     )
     
     // Scans
@@ -39,8 +39,7 @@ public struct SingleBookingReport: Report {
                height: document.layout.height 
                - document.layout.margin.top 
                - document.layout.margin.bottom
-               -  10 // Spacer before scans
-               - 220 // Report info & header
+               - 210 // Report info & header
         )
     }
     
@@ -67,7 +66,7 @@ public struct SingleBookingReport: Report {
         return reportRecord.date.formatted(style)
     }
     private var iconImage: PlatformImage {
-        let symbolSize = CGSize(width: 40, height: 40)
+        let symbolSize = CGSize(width: 30, height: 30)
         let symbolImage = UIImage(systemName: reportRecord.icon) ?? UIImage(systemName: "questionmark")!
         guard let resizedImage = symbolImage.resized(to: symbolSize, alignment: .left)
         else { fatalError() }
@@ -90,7 +89,7 @@ public struct SingleBookingReport: Report {
         row1Table.style = rowTableStyle
         let row1 = row1Table[row: 0]
         row1.content = [cashFlowFormatted , dateFormatted]
-        row1.style = [boldTextStyle, textStyle]
+        row1.style = [boldTextCellStyle, regularTextCellStyle]
         row1.alignment = [.left, .right]
         document.add(table: row1Table)
         
@@ -99,7 +98,7 @@ public struct SingleBookingReport: Report {
         row2Table.style = rowTableStyle
         let row2 = row2Table[row: 0]
         row2.content = [iconImage, reportRecord.text, amountFormatted]
-        row2.style = [textStyle, textStyle, digitStyle]
+        row2.style = [regularTextCellStyle, regularTextCellStyle, digitCellStyle]
         row2.alignment = [.left, .left, .right] 
         // Set table padding and margin
         document.add(table: row2Table)
@@ -111,6 +110,7 @@ public struct SingleBookingReport: Report {
     
     private func addReducedReportInfo(to document: PDFDocument, scanPage: Int, allScanPages: Int) {
         document.addLineSeparator(PDFContainer.contentLeft, style: ReportStyle.dividerLine)
+        document.set(font: ReportStyle.regular)
         document.add(.contentLeft, text: "\(reportRecord.text) (\(scanPage)/\(allScanPages))")
         document.add(space: 50.0)
         document.addLineSeparator(PDFContainer.contentLeft, style: ReportStyle.dividerLine)
@@ -199,19 +199,6 @@ public struct SingleBookingReport: Report {
     }
 }
 
-
-fileprivate struct SingleBookingFonts {
-    static let title = Font.systemFont(ofSize: 30, weight: .bold)
-    static let regular = Font.systemFont(ofSize: 15, weight: .regular)
-    static  let bold = Font.systemFont(ofSize: 15, weight: .bold)
-#if canImport(UIKit)
-    static  let digit = UIFont.monospacedDigitSystemFont(ofSize: 15, weight: .regular)
-    static  let digitBold = UIFont.monospacedDigitSystemFont(ofSize: 15, weight: .bold)
-#elseif canImport(AppKit)
-    static  let digit = NSFont.monospacedDigitSystemFont(ofSize: 15, weight: .regular)
-    static  let digitBold = NSFont.monospacedDigitSystemFont(ofSize: 15, weight: .bold)
-#endif
-}
 fileprivate var rowTableStyle: PDFTableStyle {
     PDFTableStyle(
         rowHeaderCount: 0,

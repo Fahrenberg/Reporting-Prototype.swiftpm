@@ -31,7 +31,6 @@ public struct FullReport: Report {
     }
     
     private let logoSize = CGSize(width: 300, height: 70)
-    private let dividerLineStyle = PDFLineStyle(type: .full, color: .darkGray, width: 0.5)
     
     private var logo: PDFImage {
         guard let resizedImage = logoImage.resized(to: logoSize, alignment: .right)
@@ -44,19 +43,12 @@ public struct FullReport: Report {
         // Logo Header
         document.add(.contentRight, image: logo)
         document.add(space: 20.0)
-        document.addLineSeparator(PDFContainer.contentLeft, style: dividerLineStyle)
+        document.addLineSeparator(PDFContainer.contentLeft, style: ReportStyle.dividerLine)
         // Title
         document.add(space: 10.0)
         document.set(.contentLeft, textColor: .black)
-        document.set(.contentLeft, font: FullReportFonts.title)
+        document.set(.contentLeft, font: ReportStyle.title)
         document.add(.contentLeft, text: "Kontoauszug")
         document.add(space: 40.0)
     }
-}
-
-fileprivate struct FullReportFonts {
-    static let title = Font.systemFont(ofSize: 20, weight: .bold)
-    static let regular = Font.systemFont(ofSize: 10, weight: .regular)
-    static let footerRegular = Font.systemFont(ofSize: 10, weight: .regular)
-    static let footerBold = Font.systemFont(ofSize: 10, weight: .bold)
 }

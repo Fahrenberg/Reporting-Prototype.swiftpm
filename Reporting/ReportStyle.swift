@@ -15,11 +15,11 @@ struct ReportStyle {
     static let footerRegular = Font.systemFont(ofSize: 10, weight: .regular)
     static let footerBold = Font.systemFont(ofSize: 10, weight: .bold)
 #if canImport(UIKit)
-    static  let digit = UIFont.monospacedDigitSystemFont(ofSize: 15, weight: .regular)
-    static  let digitBold = UIFont.monospacedDigitSystemFont(ofSize: 15, weight: .bold)
+    static  let digit = UIFont.monospacedDigitSystemFont(ofSize: 10, weight: .regular)
+    static  let digitBold = UIFont.monospacedDigitSystemFont(ofSize: 10, weight: .bold)
 #elseif canImport(AppKit)
-    static  let digit = NSFont.monospacedDigitSystemFont(ofSize: 15, weight: .regular)
-    static  let digitBold = NSFont.monospacedDigitSystemFont(ofSize: 15, weight: .bold)
+    static  let digit = NSFont.monospacedDigitSystemFont(ofSize: 10, weight: .regular)
+    static  let digitBold = NSFont.monospacedDigitSystemFont(ofSize: 10, weight: .bold)
 #endif
 }
 

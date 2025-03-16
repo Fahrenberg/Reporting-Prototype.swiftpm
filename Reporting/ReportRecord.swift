@@ -13,7 +13,7 @@ import UIKit
 import AppKit
 #endif
 
-struct ReportRecord {
+public struct ReportRecord {
     let date: Date
     let icon: String
     let text: String

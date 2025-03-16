@@ -14,9 +14,11 @@ import TPPDF
 import ImageCompressionKit
 import Extensions
 
-struct FullReport: Report {
+public struct FullReport: Report {
+    public var paperSize: PDFPageFormat = .a4
+    public var landscape: Bool = false
     
-    func addReport(to document: PDFDocument) {
+    public  func addReport(to document: PDFDocument) {
 
         addFooter(to: document)
         
@@ -29,15 +31,6 @@ struct FullReport: Report {
             SingleBookingReport(reportRecord: reportRecord).addReport(to: document)
         }
         
-    }
-    
-    func generateDocument() -> [PDFDocument] {
-        let document = PDFDocument(format: .a4)
-        document.layout.size = PDFPageFormat.a4.landscapeSize
-        document.background.color = .white
-        
-        addReport(to: document)
-        return [document]
     }
     
     private let logoSize = CGSize(width: 300, height: 70)

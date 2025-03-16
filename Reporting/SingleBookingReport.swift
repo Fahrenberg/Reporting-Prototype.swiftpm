@@ -9,34 +9,18 @@ import Extensions
 import CoreGraphics
 import OSLog
 
-struct SingleBookingReport: Report {
-    let reportRecord: ReportRecord
+public struct SingleBookingReport: Report {
+    public let reportRecord: ReportRecord
+    public var paperSize: PDFPageFormat = .a4
+    public var landscape: Bool = false
     
-    func addReport(to document: PDFDocument) {
+    public func addReport(to document: PDFDocument) {
         addHeader(to: document)
         addFullReportInfo(to: document)
         addScans(to: document)
 
     }
     
-    func generateDocument() -> [PDFDocument] {
-//        print("PDFDocument \(document.debugDescription)")
-//        Logger.source.info("PDFDocument: \(document.debugDescription) ")
-        let document = PDFDocument(format: .a4)
-        // Pagination
-        document.add(.footerRight, text: "SingleBookingReport")
-        let pagination = PDFPagination(container: .footerCenter)
-        document.pagination = pagination
-        //
-        
-        addReport(to: document)
-       
-
-        return [document]
-    }
-    
-   
-    private let dividerLineStyle = PDFLineStyle(type: .full, color: .darkGray, width: 0.5)
     private let logoSize = CGSize(width: 300, height: 70)
     private let digitStyle = PDFTableCellStyle(font: SingleBookingFonts.digit)
     private let boldTextStyle = PDFTableCellStyle(font: SingleBookingFonts.bold)

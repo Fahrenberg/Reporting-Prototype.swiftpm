@@ -8,14 +8,13 @@ import Foundation
 import TPPDF
 import OSLog
 
-protocol Report {
-    /// Generates a instance of PDFDocument with basic layout definition
+public protocol Report {
+    /// PDF Paper Size
     ///
-    /// - Paper Size
-    /// - Paper Color
-    /// - Should call addReport to fill the PDFDocument
-    func generateDocument() -> [PDFDocument]
+    var paperSize: PDFPageFormat { get set}
     
+    /// PDF Paper Orientation
+    var landscape: Bool {get set }
     /// Adds report layout to PDFDocument
     ///
     /// Can be used to add mulitple reports into one PDFDocument
@@ -24,8 +23,23 @@ protocol Report {
 }
 
 extension Report {
-    /// Create Data from PDF Document 
-    func data(debugFrame: Bool = false) -> Data? {
+    /// Generates a instance of PDFDocument with basic layout definition
+    func generateDocument() -> [PDFDocument] {
+        let document = PDFDocument(format: paperSize)
+        if landscape {
+            document.layout.size = PDFPageFormat.a4.landscapeSize
+        }
+        document.background.color = .white
+        addReport(to: document)
+        return [document]
+    }
+    
+    var dividerLineStyle: PDFLineStyle { PDFLineStyle(type: .full, color: .darkGray, width: 0.5) }
+    
+    
+    
+    /// Create Data from PDF Document
+    public  func data(debugFrame: Bool = false) -> Data? {
         let pdfDocuments = generateDocument()
         let generator: PDFGeneratorProtocol?  // Define generator variable outside switch
         
@@ -55,7 +69,7 @@ extension Report {
 
     
     /// Write PDF Document with default filename to module temporary  directory
-    func write() -> URL? {
+    public func write() -> URL? {
         guard let data = data() else {
             return nil
         }

@@ -3,6 +3,7 @@ import PDFKit
 import OSLog
 import Extensions
 
+
 struct ContentView: View {
     // pdfData is now a @State variable
     @State private var pdfData: Data = Data() // Initialize with an empty Data object
@@ -54,8 +55,6 @@ struct ContentView: View {
             report = FullReport()
         case .TableReport:
             report = TableReport(reportRecords: ReportRecords.mocks() )
-        case .PDFFile:
-            report = ExternalPDF()
         }
         guard let data = report?.data(debugFrame: debugFrame)
         else { 
@@ -112,5 +111,4 @@ enum ReportType {
     case PlaygroundReport
     case FullReport
     case TableReport
-    case PDFFile
 }

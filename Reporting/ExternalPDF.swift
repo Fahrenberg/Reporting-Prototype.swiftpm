@@ -2,6 +2,9 @@ import SwiftUI
 import TPPDF
 
 struct ExternalPDF: Report {
+    public var paperSize: PDFPageFormat = .a4
+    public var landscape: Bool = false
+    
     func addReport(to document: PDFDocument) {
         let bundle = Bundle.module
         guard let pdfURL = bundle.url(forResource: "roche", withExtension: "pdf")
@@ -11,10 +14,4 @@ struct ExternalPDF: Report {
         let pdf = PDFExternalDocument(url: pdfURL)
         document.add(externalDocument: pdf)
     }
-        
-    func generateDocument() -> [PDFDocument] {
-         let document = PDFDocument(format: .a4)
-         addReport(to: document)
-         return [document]
-     }
 }

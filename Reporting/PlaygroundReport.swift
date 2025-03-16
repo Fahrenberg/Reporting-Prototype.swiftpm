@@ -9,10 +9,11 @@ import Extensions
 import CoreGraphics
 
 struct PlaygroundReport: Report {
-    
-    private let document = PDFDocument(format: .a4)
+    public var paperSize: PDFPageFormat = .a4
+    public var landscape: Bool = false
+ 
     // Scans
-    var scansSize: CGSize {
+    private func scansSize(document: PDFDocument) -> CGSize  {
         let documentContentWidth = document.layout.width
         - document.layout.margin.left
         - document.layout.margin.right
@@ -38,10 +39,6 @@ struct PlaygroundReport: Report {
     private let lineStyle = PDFLineStyle(type: .full, color: .purple, width: 1.0)
    
     func addReport(to document: PDFDocument) {
-        
-    } 
-    
-    func generateDocument() -> [PDFDocument] {
         // Pagination
         document.add(.footerRight, text: "Date")
         let pagination = PDFPagination(container: .footerCenter)
@@ -51,13 +48,13 @@ struct PlaygroundReport: Report {
         
         let groupBorder = PDFGroup(
             allowsBreaks: true,
-            backgroundColor: .clear, 
-            outline: lineStyle, 
+            backgroundColor: .clear,
+            outline: lineStyle,
             padding: EdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
         )
-            .addBorderShapeRectangle(size: scansSize, color: .blue)
+            .addBorderShapeRectangle(size: scansSize(document: document), color: .blue)
         
-        for _ in 0..<5 { 
+        for _ in 0..<5 {
             groupBorder.add(image: logo)
         }
         document.add(text: "--- first start ---- ")
@@ -71,13 +68,13 @@ struct PlaygroundReport: Report {
 
         let groupOutline = PDFGroup(
             allowsBreaks: true,
-            backgroundColor: .clear, 
+            backgroundColor: .clear,
             outline: lineStyle,
             padding: EdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
         )
-            .addBorderShapeRectangle(size: scansSize, color: .blue)
+            .addBorderShapeRectangle(size: scansSize(document: document), color: .blue)
         
-        for _ in 0..<5 { 
+        for _ in 0..<5 {
             groupOutline.add(image: logo)
         }
         document.add(group: groupOutline)
@@ -90,19 +87,19 @@ struct PlaygroundReport: Report {
         
         let group = PDFGroup(
             allowsBreaks: true,
-            backgroundColor: .clear, 
+            backgroundColor: .clear,
             outline: lineStyle,
             padding: EdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
         )
-            .addBorderShapeRectangle(size: scansSize, color: .blue)
+            .addBorderShapeRectangle(size: scansSize(document: document), color: .blue)
         
-        for _ in 0..<5 { 
+        for _ in 0..<5 {
             group.add(image: logo)
         }
         document.add(group: group)
         document.add(space: 10)
         document.add(text: "--- thrid finished ---- ")
         
-        return [document]
     }
+    
 }

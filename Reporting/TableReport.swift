@@ -13,10 +13,12 @@ import UIKit
 import AppKit
 #endif
 
-struct TableReport: Report {
+public struct TableReport: Report {
     let reportRecords: [ReportRecord]
+    public var paperSize: PDFPageFormat = .a4
+    public var landscape: Bool = false
     
-    func addReport(to document: PDFDocument) {
+    public func addReport(to document: PDFDocument) {
 
         addPageHeader(to: document)
         
@@ -30,15 +32,6 @@ struct TableReport: Report {
         document.add(table: table)
     }
     
-    func generateDocument() -> [PDFDocument] {
-        let document = PDFDocument(format: .a4)
-        document.background.color = .white
-        
-        addFooter(to: document)
-        addReport(to: document)
-        
-        return [document]
-    }
     
     private let logoSize = CGSize(width: 300, height: 70)
     private let dividerLineStyle = PDFLineStyle(type: .full, color: .darkGray, width: 0.5)

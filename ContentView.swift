@@ -7,7 +7,7 @@ import Extensions
 struct ContentView: View {
     // pdfData is now a @State variable
     @State private var pdfData: Data = Data() // Initialize with an empty Data object
-    @State private var reportType: ReportType = .TableReport
+    @State private var reportType: ReportType = .SingleBookingReport
     @State private var debugFrame = false
     var body: some View {
         VStack {
@@ -49,7 +49,7 @@ struct ContentView: View {
         var report: Report?
         switch reportType {
         case .SingleBookingReport:
-            report =  SingleBookingReport(reportRecord: ReportRecord.mock(scanCount: 4))
+            report =  SingleBookingReport(reportRecord: ReportRecord.mock(scanCount: 6))
         case .PlaygroundReport:
             report = PlaygroundReport()
         case .FullReport:

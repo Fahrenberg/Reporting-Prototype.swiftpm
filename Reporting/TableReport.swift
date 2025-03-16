@@ -19,9 +19,7 @@ public struct TableReport: Report {
     public var landscape: Bool = false
     
     public func addReport(to document: PDFDocument) {
-
         addPageHeader(to: document)
-        
         // Add Record Table
         let table = PDFTable(rows: reportRecords.count + 2, columns: 4) // Records + 1 Header + 1 Footer
         table.style = PDFTableStyle() // set to default

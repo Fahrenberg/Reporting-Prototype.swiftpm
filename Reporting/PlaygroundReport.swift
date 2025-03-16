@@ -39,13 +39,6 @@ struct PlaygroundReport: Report {
     private let lineStyle = PDFLineStyle(type: .full, color: .purple, width: 1.0)
    
     func addReport(to document: PDFDocument) {
-        // Pagination
-        document.add(.footerRight, text: "Date")
-        let pagination = PDFPagination(container: .footerCenter)
-        document.pagination = pagination
-        //
-        
-        
         let groupBorder = PDFGroup(
             allowsBreaks: true,
             backgroundColor: .clear,

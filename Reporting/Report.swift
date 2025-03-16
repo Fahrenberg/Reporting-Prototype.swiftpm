@@ -65,9 +65,44 @@ extension Report {
             document.layout.size = PDFPageFormat.a4.landscapeSize
         }
         document.background.color = .white
+        addFooter(to: document)
         addReport(to: document)
         return [document]
     }
+}
+
+extension Report {
+    func addFooter(to document: PDFDocument) {
+        // Footer text right
+        document.addLineSeparator(.footerCenter, style: ReportStyle.dividerLine)
+        document.set(.footerRight, font: ReportStyle.footerRegular)
+        let date = Date()
+        // Use the .dateTime format and localize to German
+        let formattedDate = date.formatted(
+            .dateTime
+                .day(.twoDigits)
+                .month(.twoDigits)
+                .year(.defaultDigits)
+                .hour(.defaultDigits(amPM: .abbreviated))
+                .minute(.defaultDigits)
+        )
+        
+        let footerRightText = "Druckdatum: \(formattedDate)"
+        document.add(.footerRight, text: footerRightText)
+        
+        // Pagination
+        let numberFormatter = NumberFormatter()
+        numberFormatter.numberStyle = .none
+        
+        let pagination = PDFPagination(
+            container: .footerCenter,
+            style: PDFPaginationStyle.customNumberFormat(template: "%@/%@",
+                                                         formatter: numberFormatter)
+        )
+        document.pagination = pagination
+        
+    }  
+    
 }
 
 // Internal Extensions

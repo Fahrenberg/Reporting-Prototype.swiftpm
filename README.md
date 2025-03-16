@@ -12,6 +12,8 @@ Evaluating the [TPPDF Library](https://github.com/techprimate/TPPDF) to generate
 
 - From Working Copy and terminal add to GitHub repo with  private SSH GitHub key.
 
+- [App development on iPad](https://mutatingfunc.github.io/blog/2024-10-12-app-development-on-ipad/)
+
 ---------------------
 
 <sup>(c) 2025 [Jean-Nicolas Fahrenberg](https://www.fahrenberg.app)</sup>

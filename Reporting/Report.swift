@@ -9,7 +9,17 @@ import TPPDF
 import OSLog
 
 protocol Report {
+    /// Generates a instance of PDFDocument with basic layout definition
+    ///
+    /// - Paper Size
+    /// - Paper Color
+    /// - Should call addReport to fill the PDFDocument
     func generateDocument() -> [PDFDocument]
+    
+    /// Adds report layout to PDFDocument
+    ///
+    /// Can be used to add mulitple reports into one PDFDocument
+    /// and ensure correct pagination
     func addReport(to document: PDFDocument)
 }
 

@@ -17,15 +17,8 @@ import Extensions
 struct FullReport: Report {
     
     func addReport(to document: PDFDocument) {
-        
-    }
-    
-    func generateDocument() -> [PDFDocument] {
-        let document = PDFDocument(format: .a4)
-        document.background.color = .white
-        
+
         addFooter(to: document)
-        
         
         let reportRecords = ReportRecords.mocks()
         let table = TableReport(reportRecords: reportRecords)
@@ -36,7 +29,14 @@ struct FullReport: Report {
             SingleBookingReport(reportRecord: reportRecord).addReport(to: document)
         }
         
+    }
+    
+    func generateDocument() -> [PDFDocument] {
+        let document = PDFDocument(format: .a4)
+        document.layout.size = PDFPageFormat.a4.landscapeSize
+        document.background.color = .white
         
+        addReport(to: document)
         return [document]
     }
     

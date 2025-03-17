@@ -73,17 +73,17 @@ extension Report {
 }
 
 extension Report {
-     func addHeader(to document: PDFDocument) {
-         let logoSize = CGSize(width: 300, height: 70)
-         var logo: PDFImage {
-             guard let resizedImage = logoImage.resized(to: logoSize, alignment: .right)
-             else { fatalError() }
-             let finalImage = resizedImage.fillFrame(frameColor: .white).addFrame(frameColor: .lightGray)
-             return PDFImage(image: finalImage, options: [.none])
-         }
-         // Logo Header
-         document.add(.headerRight, image: logo)
-     }
+    func addHeader(to document: PDFDocument) {
+        let logoSize = CGSize(width: 300, height: 70)
+        var logo: PDFImage {
+            guard let resizedImage = logoImage.resized(to: logoSize, alignment: .right)
+            else { fatalError() }
+            let finalImage = resizedImage.fillFrame(frameColor: .white).addFrame(frameColor: .lightGray)
+            return PDFImage(image: finalImage, options: [.none])
+        }
+        // Logo Header
+        document.add(.headerRight, image: logo)
+    }
     
     func addFooter(to document: PDFDocument) {
         // Footer text right

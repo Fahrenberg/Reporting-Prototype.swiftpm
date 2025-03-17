@@ -40,6 +40,8 @@ public protocol Report {
     /// - SeeAlso: [TPPDF Documentation](https://github.com/techprimate/TPPDF/blob/269dd6627b5ade0f9de600723a001bd419f6ebf5/Documentation/Usage.md)
     ///
     func addReport(to document: PDFDocument)
+    
+    var showHeaderFooter: Bool { get }
 }
 extension Report {
     /// Create Data from PDFDocument
@@ -90,9 +92,11 @@ extension Report {
             document.layout.size = PDFPageFormat.a4.landscapeSize
         }
         document.background.color = .white
-        document.set(textColor: .black)
-        addHeader(to: document)
-        addFooter(to: document)
+        if showHeaderFooter {
+            document.set(textColor: .black) // for external documents no textcolor must be set            
+            addHeader(to: document)
+            addFooter(to: document)
+        }
         addReport(to: document)
         return [document]
     }
@@ -145,6 +149,7 @@ extension Report {
         
     }  
     
+    public var showHeaderFooter: Bool { true }
 }
 
 // Internal Extensions

@@ -122,6 +122,8 @@ struct PlaygroundReport: Report {
         document.add(space: 10)
         document.add(text: "--- thrid finished ---- ")
         
+        let externalPDF = ExternalPDF()
+        externalPDF.addReport(to: document)        
     }
     
 }

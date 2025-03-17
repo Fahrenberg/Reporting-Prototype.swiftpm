@@ -41,6 +41,9 @@ public protocol Report {
     ///
     func addReport(to document: PDFDocument)
     
+    /// Shows document Header and Footer (default)
+    ///
+    /// Set to false when adding external pdf to avoid empty blank page.
     var showHeaderFooter: Bool { get }
 }
 extension Report {

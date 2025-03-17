@@ -81,39 +81,6 @@ public struct TableReport: Report {
         }
     }
     
-    func addFooter(to document: PDFDocument) {
-        // Footer text right
-        document.addLineSeparator(.footerCenter, style: dividerLineStyle)
-        document.set(.footerRight, font: TableFonts.regular)
-        let date = Date()
-        // Use the .dateTime format and localize to German
-        let formattedDate = date.formatted(
-            .dateTime
-                .day(.twoDigits)
-                .month(.twoDigits)
-                .year(.defaultDigits)
-                .hour(.defaultDigits(amPM: .abbreviated))
-                .minute(.defaultDigits)
-        )
-        
-        let footerRightText = "Druckdatum: \(formattedDate)"
-        document.add(.footerRight, text: footerRightText)
-        
-        // Pagination
-        let numberFormatter = NumberFormatter()
-        numberFormatter.numberStyle = .none
-        
-        let pagination = PDFPagination(
-            container: .footerCenter,
-            style: PDFPaginationStyle.customNumberFormat(template: "%@/%@",
-                                                         formatter: numberFormatter)
-        )
-        document.pagination = pagination
-        
-    }
-   
-    
-    
 }
 
 fileprivate extension PDFTableRow {

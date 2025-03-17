@@ -15,6 +15,21 @@ public protocol Report {
     
     /// PDF Paper Orientation
     var landscape: Bool {get set }
+    
+    /// Document Header layout
+    ///
+    /// Default header layout available
+    /// can be overwritten by Report implementation
+    ///
+    func addHeader(to document: PDFDocument)
+    
+    /// Document Footer layout
+    ///
+    /// Default footer layout available
+    /// can be overwritten by Report implementation
+    ///
+    func addFooter(to document: PDFDocument)
+    
     /// Adds report layout to PDFDocument
     ///
     /// Can be used to add mulitple reports into one PDFDocument
@@ -65,6 +80,7 @@ extension Report {
             document.layout.size = PDFPageFormat.a4.landscapeSize
         }
         document.background.color = .white
+        document.set(textColor: .black)
         addHeader(to: document)
         addFooter(to: document)
         addReport(to: document)
@@ -73,7 +89,7 @@ extension Report {
 }
 
 extension Report {
-    func addHeader(to document: PDFDocument) {
+    public func addHeader(to document: PDFDocument) {
         let logoSize = CGSize(width: 300, height: 70)
         var logo: PDFImage {
             guard let resizedImage = logoImage.resized(to: logoSize, alignment: .right)
@@ -85,7 +101,8 @@ extension Report {
         document.add(.headerRight, image: logo)
     }
     
-    func addFooter(to document: PDFDocument) {
+    public func addFooter(to document: PDFDocument) {
+        document.set(textColor: .black)
         // Footer text right
         document.addLineSeparator(.footerCenter, style: ReportStyle.dividerLine)
         document.set(.footerRight, font: ReportStyle.footerRegular)
@@ -110,7 +127,9 @@ extension Report {
         let pagination = PDFPagination(
             container: .footerCenter,
             style: PDFPaginationStyle.customNumberFormat(template: "%@/%@",
-                                                         formatter: numberFormatter)
+                                                         formatter: numberFormatter),
+            textAttributes: [.font: ReportStyle.footerRegular,
+                             .foregroundColor: Color.black]
         )
         document.pagination = pagination
         

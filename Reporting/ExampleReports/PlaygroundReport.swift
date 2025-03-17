@@ -12,6 +12,35 @@ struct PlaygroundReport: Report {
     public var paperSize: PDFPageFormat = .a4
     public var landscape: Bool = false
  
+    
+    func addFooter(to document: PDFDocument) {
+        // Footer text right
+        
+        document.set(.footerRight, font: ReportStyle.title)
+        
+        let footerRightText = "PlaygroundReport"
+        document.add(.footerRight, text: footerRightText)
+        document.set(.footerCenter, font: ReportStyle.title)
+        // Pagination
+        let numberFormatter = NumberFormatter()
+        numberFormatter.numberStyle = .none
+        
+        let pagination = PDFPagination(
+            container: .footerCenter,
+            style: PDFPaginationStyle.customNumberFormat(template: "%@/%@",
+                                                         formatter: numberFormatter),
+            textAttributes: [
+                .font: ReportStyle.title,
+                .foregroundColor: Color.red,
+                    ]
+        )
+        
+        
+        document.pagination = pagination
+        
+    }
+    
+    
     // Scans
     private func scansSize(document: PDFDocument) -> CGSize  {
         let documentContentWidth = document.layout.width

@@ -16,28 +16,38 @@ public protocol Report {
     /// PDF Paper Orientation
     var landscape: Bool {get set }
     
-    /// Document Header layout
+    /// Customised Document Header layout
     ///
-    /// Default header layout available
-    /// can be overwritten by Report implementation
+    /// - If ommited, uses default header layout
+    ///
+    /// - Can be overwritten by concrete Report implementation
     ///
     func addHeader(to document: PDFDocument)
     
-    /// Document Footer layout
+    /// Customised Document Footer layout
     ///
-    /// Default footer layout available
-    /// can be overwritten by Report implementation
+    /// - If ommited, uses default footer layout.
+    ///
+    /// - Can be overwritten by concrete Report implementation.
     ///
     func addFooter(to document: PDFDocument)
     
     /// Adds report layout to PDFDocument
     ///
-    /// Can be used to add mulitple reports into one PDFDocument
-    /// and ensure correct pagination
+    /// Add one or mulitple report layouts into one PDFDocument
+    /// to ensure continous pagination.
+    ///
+    /// - SeeAlso: [TPPDF Documentation](https://github.com/techprimate/TPPDF/blob/269dd6627b5ade0f9de600723a001bd419f6ebf5/Documentation/Usage.md)
+    ///
     func addReport(to document: PDFDocument)
 }
 extension Report {
-    /// Create Data from PDF Document
+    /// Create Data from PDFDocument
+    ///
+    /// - Parameters:
+    ///     -  debugFrame: shows dotted lines around PDF elements.
+    ///                    default == `false`
+    ///
     public func data(debugFrame: Bool = false) -> Data? {
         let pdfDocuments = generateDocument()
         let generator: PDFGeneratorProtocol?  // Define generator variable outside switch
@@ -65,7 +75,7 @@ extension Report {
         }
     }
     
-    /// Write PDF Document with default filename to module temporary  directory
+    /// Write PDFDocument with default filename to module temporary directory
     public func write() -> URL? {
         guard let data = data() else {
             return nil
@@ -100,7 +110,7 @@ extension Report {
         // Logo Header
         document.add(.headerRight, image: logo)
     }
-    
+    /// Default Document Footer layout
     public func addFooter(to document: PDFDocument) {
         document.set(textColor: .black)
         // Footer text right

@@ -89,6 +89,11 @@ extension Report {
     }
     
     /// Generates a instance of PDFDocument with basic layout definition
+    ///
+    /// Papersize from Report `papersize` 
+    /// Print orientation from Repor `landscape`.
+    /// White paper background and black printing.
+    ///
     func generateDocument() -> [PDFDocument] {
         let document = PDFDocument(format: paperSize)
         if landscape {
@@ -106,6 +111,7 @@ extension Report {
 }
 
 extension Report {
+    /// Default Document Header layout
     public func addHeader(to document: PDFDocument) {
         let logoSize = CGSize(width: 300, height: 70)
         var logo: PDFImage {
@@ -151,7 +157,10 @@ extension Report {
         document.pagination = pagination
         
     }  
-    
+    /// Show Header and Footer (default)
+    ///
+    /// Can be overwritten by concrete Report implementation.
+    ///
     public var showHeaderFooter: Bool { true }
 }
 

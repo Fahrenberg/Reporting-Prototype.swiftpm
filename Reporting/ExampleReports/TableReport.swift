@@ -13,7 +13,7 @@ import UIKit
 import AppKit
 #endif
 
-public struct TableReport: Report {
+public struct TableReport: PDFReporting {
     let reportRecords: [ReportRecord]
     public var paperSize: PDFPageFormat = .a4
     public var landscape: Bool = false

@@ -1,7 +1,7 @@
 import SwiftUI
 import TPPDF
 
-struct ExternalPDF: Report {
+struct ExternalPDF: PDFReporting {
     public var paperSize: PDFPageFormat = .a4
     public var landscape: Bool = false
     

@@ -46,7 +46,7 @@ struct ContentView: View {
     // Example function to load PDF data
     private func loadSamplePDF(reportType: ReportType) {
         pdfData = Data()
-        var report: Report?
+        var report: PDFReporting?
         switch reportType {
         case .SingleBookingReport:
             report =  SingleBookingReport(reportRecord: ReportRecord.mock(scanCount: 6))

@@ -8,7 +8,7 @@ import ImageCompressionKit
 import Extensions
 import CoreGraphics
 
-struct PlaygroundReport: Report {
+struct PlaygroundReport: PDFReporting {
     public var paperSize: PDFPageFormat = .a4
     public var landscape: Bool = false
  

@@ -9,7 +9,7 @@ import Extensions
 import CoreGraphics
 import OSLog
 
-public struct SingleBookingReport: Report {
+public struct SingleBookingReport: PDFReporting {
     public let reportRecord: ReportRecord
     public var paperSize: PDFPageFormat = .a4
     public var landscape: Bool = false

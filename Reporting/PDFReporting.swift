@@ -8,7 +8,7 @@ import Foundation
 import TPPDF
 import OSLog
 
-public protocol Report {
+public protocol PDFReporting {
     /// PDF Paper Size
     ///
     var paperSize: PDFPageFormat { get set}
@@ -46,7 +46,7 @@ public protocol Report {
     /// Set to false when adding external pdf to avoid empty blank page.
     var showHeaderFooter: Bool { get }
 }
-extension Report {
+extension PDFReporting {
     /// Create Data from PDFDocument
     ///
     /// - Parameters:
@@ -110,7 +110,7 @@ extension Report {
     }
 }
 
-extension Report {
+extension PDFReporting {
     /// Default Document Header layout
     public func addHeader(to document: PDFDocument) {
         let logoSize = CGSize(width: 300, height: 70)

@@ -20,13 +20,13 @@ public struct SingleBookingReport: PDFReporting {
 
     }
     
-    private let digitCellStyle = PDFTableCellStyle(font: ReportStyle.digit)
-    private let boldTextCellStyle = PDFTableCellStyle(font: ReportStyle.bold)
-    private let regularTextCellStyle = PDFTableCellStyle(font: ReportStyle.regular)
+    private let digitCellStyle = PDFTableCellStyle(font: PDFReportingStyle.digit)
+    private let boldTextCellStyle = PDFTableCellStyle(font: PDFReportingStyle.bold)
+    private let regularTextCellStyle = PDFTableCellStyle(font: PDFReportingStyle.regular)
 
     private let digitTableStyle = PDFTableCellStyle(
         borders: PDFTableCellBorders(top: PDFLineStyle(type: .full, color: .darkGray, width: 0.5)),
-        font: ReportStyle.digit
+        font: PDFReportingStyle.digit
     )
     
     // Scans
@@ -67,7 +67,7 @@ public struct SingleBookingReport: PDFReporting {
     }
     
     private func addFullReportInfo(to document: PDFDocument) {
-        document.addLineSeparator(PDFContainer.contentLeft, style: ReportStyle.dividerLine)
+        document.addLineSeparator(PDFContainer.contentLeft, style: PDFReportingStyle.dividerLine)
         document.add(space: 5.0)
         // Add booking information as table
         let row1Table = PDFTable(rows: 1, columns: 2)
@@ -89,17 +89,17 @@ public struct SingleBookingReport: PDFReporting {
         document.add(table: row2Table)
         
         document.add(space: 5.0)
-        document.addLineSeparator(PDFContainer.contentLeft, style: ReportStyle.dividerLine)
+        document.addLineSeparator(PDFContainer.contentLeft, style: PDFReportingStyle.dividerLine)
         
     }
     
     private func addReducedReportInfo(to document: PDFDocument, scanPage: Int, allScanPages: Int) {
-        document.addLineSeparator(PDFContainer.contentLeft, style: ReportStyle.dividerLine)
+        document.addLineSeparator(PDFContainer.contentLeft, style: PDFReportingStyle.dividerLine)
         document.add(space: 5.0)
-        document.set(font: ReportStyle.regular)
+        document.set(font: PDFReportingStyle.regular)
         document.add(.contentLeft, text: "\(reportRecord.text) (\(scanPage)/\(allScanPages))")
         document.add(space: 50.0)
-        document.addLineSeparator(PDFContainer.contentLeft, style: ReportStyle.dividerLine)
+        document.addLineSeparator(PDFContainer.contentLeft, style: PDFReportingStyle.dividerLine)
         document.add(space: 10.0)
     }
     

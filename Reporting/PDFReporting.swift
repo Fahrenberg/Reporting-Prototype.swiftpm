@@ -127,8 +127,8 @@ extension PDFReporting {
     public func addFooter(to document: PDFDocument) {
         document.set(textColor: .black)
         // Footer text right
-        document.addLineSeparator(.footerCenter, style: ReportStyle.dividerLine)
-        document.set(.footerRight, font: ReportStyle.footerRegular)
+        document.addLineSeparator(.footerCenter, style: PDFReportingStyle.dividerLine)
+        document.set(.footerRight, font: PDFReportingStyle.footerRegular)
         let date = Date()
         // Use the .dateTime format and localize to German
         let formattedDate = date.formatted(
@@ -151,7 +151,7 @@ extension PDFReporting {
             container: .footerCenter,
             style: PDFPaginationStyle.customNumberFormat(template: "%@/%@",
                                                          formatter: numberFormatter),
-            textAttributes: [.font: ReportStyle.footerRegular,
+            textAttributes: [.font: PDFReportingStyle.footerRegular,
                              .foregroundColor: Color.black]
         )
         document.pagination = pagination

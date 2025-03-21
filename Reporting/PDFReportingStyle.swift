@@ -7,7 +7,7 @@ import AppKit
 #endif
 
 /// Preset Styles and Fonts for all reports
-struct ReportStyle {
+struct PDFReportingStyle {
     static let dividerLine: PDFLineStyle = PDFLineStyle(type: .full, color: .darkGray, width: 0.5)
     static let title = Font.systemFont(ofSize: 20, weight: .bold)
     static let regular = Font.systemFont(ofSize: 10, weight: .regular)

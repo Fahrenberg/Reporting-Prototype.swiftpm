@@ -16,11 +16,11 @@ struct PlaygroundReport: PDFReporting {
     func addFooter(to document: PDFDocument) {
         // Footer text right
         
-        document.set(.footerRight, font: ReportStyle.title)
+        document.set(.footerRight, font: PDFReportingStyle.title)
         
         let footerRightText = "PlaygroundReport"
         document.add(.footerRight, text: footerRightText)
-        document.set(.footerCenter, font: ReportStyle.title)
+        document.set(.footerCenter, font: PDFReportingStyle.title)
         // Pagination
         let numberFormatter = NumberFormatter()
         numberFormatter.numberStyle = .none
@@ -30,7 +30,7 @@ struct PlaygroundReport: PDFReporting {
             style: PDFPaginationStyle.customNumberFormat(template: "%@/%@",
                                                          formatter: numberFormatter),
             textAttributes: [
-                .font: ReportStyle.title,
+                .font: PDFReportingStyle.title,
                 .foregroundColor: Color.red,
                     ]
         )

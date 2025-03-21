@@ -106,7 +106,7 @@ public struct SingleBookingReport: PDFReporting {
     private func addScans(to document: PDFDocument) {
         document.add(space: 10.0)
         
-        switch reportRecord.scans.count {
+        switch reportRecord.scansData.count {
         case 0:
             NoScan(document: document)
         case 1:
@@ -143,7 +143,7 @@ public struct SingleBookingReport: PDFReporting {
         
         
         let scanSize = CGSize(width: scanWidth, height: scanHeight)
-        let pdfImages: [PlatformImage] = reportRecord.scans.compactMap { data in
+        let pdfImages: [PlatformImage] = reportRecord.scansData.compactMap { data in
             guard let resizedImage = PlatformImage(data: data)?.resized(to: scanSize) else {return nil}
             return resizedImage.fillFrame().addFrame()
         }

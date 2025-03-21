@@ -21,7 +21,7 @@ public struct ReportRecord {
     var cashFlow: String { amount >=  0 ? "Einzahlung" : "Auszahlung" }
     let scanFilename: [String]
     
-    var scans: [Data] { 
+    var scansData: [Data] { 
         return scanFilename.map { imageData(filename: $0)}
     }
     static func mock(scanCount: Int = 5) -> ReportRecord {

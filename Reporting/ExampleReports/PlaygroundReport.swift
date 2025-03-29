@@ -11,7 +11,6 @@ import CoreGraphics
 struct PlaygroundReport: PDFReporting {
     public var paperSize: PDFPageFormat = .a4
     public var landscape: Bool = false
- 
     
     func addFooter(to document: PDFDocument) {
         // Footer text right
@@ -59,6 +58,7 @@ struct PlaygroundReport: PDFReporting {
     
     private var logo: PDFImage {
         let logoSize = CGSize(width: 250, height: 47)
+        let logoImage = logoImage ?? PlatformImage.image(named: "ReportingDefaultLogo.png")!
         guard let resizedImage = logoImage.resized(to: logoSize, alignment: .right)
         else { fatalError() }
         let finalImage = resizedImage.fillFrame(frameColor: .white).addFrame(frameColor: .lightGray)

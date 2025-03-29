@@ -5,7 +5,6 @@ struct ExternalPDF: PDFReporting {
     public var paperSize: PDFPageFormat = .a4
     public var landscape: Bool = false
     
-    public let showHeaderFooter: Bool = false
     
     func addReport(to document: PDFDocument) {
         let bundle = Bundle.module

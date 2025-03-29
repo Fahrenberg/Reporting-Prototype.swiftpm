@@ -1,20 +1,21 @@
 //
-//  Report.swift
-//  PDF-Reporting
-//
-//  Created by Jean-Nicolas on 31.01.2025.
-//
+//  ------------------------------------------------------------
+//  ---------------         PDFReporting          --------------
+//  ---------------                               --------------
+//  ------------------------------------------------------------
 import Foundation
+import Extensions
 import TPPDF
 import OSLog
+
 
 public protocol PDFReporting {
     /// PDF Paper Size
     ///
-    var paperSize: PDFPageFormat { get set}
+    var paperSize: PDFPageFormat { get }
     
     /// PDF Paper Orientation
-    var landscape: Bool {get set }
+    var landscape: Bool {get }
     
     /// Customised Document Header layout
     ///
@@ -39,7 +40,7 @@ public protocol PDFReporting {
     ///
     /// - SeeAlso: [TPPDF Documentation](https://github.com/techprimate/TPPDF/blob/269dd6627b5ade0f9de600723a001bd419f6ebf5/Documentation/Usage.md)
     ///
-    func addReport(to document: PDFDocument)
+    func addReport(to document: PDFDocument) async
     
     /// Shows document Header and Footer (default)
     ///
@@ -53,8 +54,8 @@ extension PDFReporting {
     ///     -  debugFrame: shows dotted lines around PDF elements.
     ///                    default == `false`
     ///
-    public func data(debugFrame: Bool = false) -> Data? {
-        let pdfDocuments = generateDocument()
+    public func data(debugFrame: Bool = false) async -> Data? {
+        let pdfDocuments = await generateDocument()
         let generator: PDFGeneratorProtocol?  // Define generator variable outside switch
         
         switch pdfDocuments.count {
@@ -81,8 +82,8 @@ extension PDFReporting {
     }
     
     /// Write PDFDocument with default filename to module temporary directory
-    public func write() -> URL? {
-        guard let data = data() else {
+    public func write() async -> URL? {
+        guard let data = await data() else {
             return nil
         }
         return data.write(ext: "pdf")
@@ -90,22 +91,22 @@ extension PDFReporting {
     
     /// Generates a instance of PDFDocument with basic layout definition
     ///
-    /// Papersize from Report `papersize` 
+    /// Papersize from Report `papersize`
     /// Print orientation from Repor `landscape`.
     /// White paper background and black printing.
     ///
-    func generateDocument() -> [PDFDocument] {
+    func generateDocument() async -> [PDFDocument] {
         let document = PDFDocument(format: paperSize)
         if landscape {
             document.layout.size = PDFPageFormat.a4.landscapeSize
         }
         document.background.color = .white
         if showHeaderFooter {
-            document.set(textColor: .black) // for external documents no textcolor must be set            
+            document.set(textColor: .black) // for external documents no textcolor must be set
             addHeader(to: document)
             addFooter(to: document)
         }
-        addReport(to: document)
+        await addReport(to: document)
         return [document]
     }
 }
@@ -113,15 +114,7 @@ extension PDFReporting {
 extension PDFReporting {
     /// Default Document Header layout
     public func addHeader(to document: PDFDocument) {
-        let logoSize = CGSize(width: 300, height: 70)
-        var logo: PDFImage {
-            guard let resizedImage = logoImage.resized(to: logoSize, alignment: .right)
-            else { fatalError() }
-            let finalImage = resizedImage.fillFrame(frameColor: .white).addFrame(frameColor: .lightGray)
-            return PDFImage(image: finalImage, options: [.none])
-        }
-        // Logo Header
-        document.add(.headerRight, image: logo)
+        // keep empty, add PDFReportingHeader or concrete addHeaderImplementation
     }
     /// Default Document Footer layout
     public func addFooter(to document: PDFDocument) {
@@ -156,7 +149,7 @@ extension PDFReporting {
         )
         document.pagination = pagination
         
-    }  
+    }
     /// Show Header and Footer (default)
     ///
     /// Can be overwritten by concrete Report implementation.
@@ -165,3 +158,24 @@ extension PDFReporting {
 }
 
 
+protocol PDFReportingHeader {
+    /// Optional Report Logo shown in default header
+    var logoImage: PlatformImage? { get }
+}
+
+
+extension PDFReportingHeader {
+    /// Default Document Header layout
+    public func addHeader(to document: PDFDocument) {
+        let logoSize = CGSize(width: 300, height: 70)
+        let logoImage = logoImage ?? PlatformImage.image(named: "ReportingDefaultLogo.png")!
+        var logo: PDFImage {
+            guard let resizedImage = logoImage.resized(to: logoSize, alignment: .right)
+            else { fatalError() }
+            let finalImage = resizedImage.fillFrame(frameColor: .white).addFrame(frameColor: .lightGray)
+            return PDFImage(image: finalImage, options: [.none])
+        }
+        // Logo Header
+        document.add(.headerRight, image: logo)
+    }
+}

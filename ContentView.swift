@@ -5,10 +5,10 @@ import Extensions
 
 
 struct ContentView: View {
-    // pdfData is now a @State variable
-    @State private var pdfData: Data = Data() // Initialize with an empty Data object
+    @State private var pdfData: Data = Data()
     @State private var reportType: ReportType = .ExternalPDF
     @State private var debugFrame = false
+
     var body: some View {
         VStack {
             if let pdfDocument = PDFDocument(data: pdfData), !pdfData.isEmpty {
@@ -22,29 +22,34 @@ struct ContentView: View {
             Spacer()
             VStack {
                 Picker("Report Type", selection: $reportType) {
-                    Text("SingleBookingReport").tag(ReportType.SingleBookingReport)
-                    Text("TableReport").tag(ReportType.TableReport)
-                    Text("FullReport").tag(ReportType.FullReport)
-                    Text("PlaygroundReport").tag(ReportType.PlaygroundReport)
-                    Text("ExternalPDF").tag(ReportType.ExternalPDF)
+                    ForEach(ReportType.allCases, id: \.self) { type in
+                        Text(type.rawValue).tag(type)
+                    }
                 }
-                HStack {
-                    Text("Show Debug Frame")
-                    Toggle("Show Debug Frame", isOn: $debugFrame)
-                        .labelsHidden()
-                }
-                .frame(maxWidth: .infinity, alignment: .center) // Ensures centering
-                .padding(.bottom, 5)
+                .pickerStyle(MenuPickerStyle())
+
+                Toggle("Show Debug Frame", isOn: $debugFrame)
+                    .padding(.bottom, 5)
             }
-            .frame(maxWidth: .infinity) // Ensures VStack takes full width
+            .frame(maxWidth: .infinity)
         }
-        .onChange(of: reportType) { loadSamplePDF(reportType: reportType) }
-        .onChange(of: debugFrame) { loadSamplePDF(reportType: reportType) }
-        .onAppear { loadSamplePDF(reportType: reportType) }
+        .onChange(of: reportType) { newValue in
+            Task {
+                await loadSamplePDF(reportType: newValue)
+            }
+        }
+        .onChange(of: debugFrame) { newValue in
+            Task {
+                await loadSamplePDF(reportType: reportType)
+            }
+        }
+        .task {
+            await loadSamplePDF(reportType: reportType)
+        }
     }
-    
+
     // Example function to load PDF data
-    private func loadSamplePDF(reportType: ReportType) {
+    private func loadSamplePDF(reportType: ReportType) async {
         pdfData = Data()
         var report: PDFReporting?
         switch reportType {
@@ -59,8 +64,8 @@ struct ContentView: View {
         case .ExternalPDF:
             report = ExternalPDF()
         }
-        guard let data = report?.data(debugFrame: debugFrame)
-        else { 
+        guard let data = await report?.data(debugFrame: debugFrame)
+        else {
             Logger.source.error("Cannot create report!")
             print("Cannot create report!")
             pdfData = Data()
@@ -109,7 +114,7 @@ struct PDFKitView: UIViewRepresentable {
 //        ContentView()
 //    }
 //}
-enum ReportType {
+enum ReportType: String, CaseIterable {
     case SingleBookingReport
     case PlaygroundReport
     case FullReport

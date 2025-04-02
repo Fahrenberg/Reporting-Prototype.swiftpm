@@ -58,7 +58,7 @@ struct PlaygroundReport: PDFReporting {
     
     private var logo: PDFImage {
         let logoSize = CGSize(width: 250, height: 47)
-        let logoImage = logoImage ?? PlatformImage.image(named: "ReportingDefaultLogo.png")!
+        let logoImage = logoImage
         guard let resizedImage = logoImage.resized(to: logoSize, alignment: .right)
         else { fatalError() }
         let finalImage = resizedImage.fillFrame(frameColor: .white).addFrame(frameColor: .lightGray)
@@ -125,5 +125,8 @@ struct PlaygroundReport: PDFReporting {
         let externalPDF = ExternalPDF()
         externalPDF.addReport(to: document)        
     }
-    
+ 
+    public func addDocument(to document: PDFDocument) async {
+        addReport(to: document)
+    }
 }

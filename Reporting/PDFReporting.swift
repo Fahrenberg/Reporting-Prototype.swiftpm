@@ -17,13 +17,6 @@ public protocol PDFReporting {
     /// PDF Paper Orientation
     var landscape: Bool {get }
     
-    /// Customised Document Header layout
-    ///
-    /// - If ommited, uses default header layout
-    ///
-    /// - Can be overwritten by concrete Report implementation
-    ///
-    func addHeader(to document: PDFDocument)
     
     /// Customised Document Footer layout
     ///
@@ -42,10 +35,10 @@ public protocol PDFReporting {
     ///
     func addReport(to document: PDFDocument) async
     
-    /// Shows document Header and Footer (default)
-    ///
-    /// Set to false when adding external pdf to avoid empty blank page.
-    var showHeaderFooter: Bool { get }
+    /// Complete document with optional document header and footer
+    /// Content added with addReport
+    func addDocument(to document: PDFDocument) async
+    
 }
 extension PDFReporting {
     /// Create Data from PDFDocument
@@ -101,21 +94,13 @@ extension PDFReporting {
             document.layout.size = PDFPageFormat.a4.landscapeSize
         }
         document.background.color = .white
-        if showHeaderFooter {
-            document.set(textColor: .black) // for external documents no textcolor must be set
-            addHeader(to: document)
-            addFooter(to: document)
-        }
-        await addReport(to: document)
+        await addDocument(to: document)
         return [document]
     }
 }
 
 extension PDFReporting {
-    /// Default Document Header layout
-    public func addHeader(to document: PDFDocument) {
-        // keep empty, add PDFReportingHeader or concrete addHeaderImplementation
-    }
+ 
     /// Default Document Footer layout
     public func addFooter(to document: PDFDocument) {
         document.set(textColor: .black)
@@ -158,24 +143,3 @@ extension PDFReporting {
 }
 
 
-protocol PDFReportingHeader {
-    /// Optional Report Logo shown in default header
-    var logoImage: PlatformImage? { get }
-}
-
-
-extension PDFReportingHeader {
-    /// Default Document Header layout
-    public func addHeader(to document: PDFDocument) {
-        let logoSize = CGSize(width: 300, height: 70)
-        let logoImage = logoImage ?? PlatformImage.image(named: "ReportingDefaultLogo.png")!
-        var logo: PDFImage {
-            guard let resizedImage = logoImage.resized(to: logoSize, alignment: .right)
-            else { fatalError() }
-            let finalImage = resizedImage.fillFrame(frameColor: .white).addFrame(frameColor: .lightGray)
-            return PDFImage(image: finalImage, options: [.none])
-        }
-        // Logo Header
-        document.add(.headerRight, image: logo)
-    }
-}

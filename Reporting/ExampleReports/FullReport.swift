@@ -29,13 +29,9 @@ public struct FullReport: PDFReporting {
         }
     }
     
-    private func addPageHeader(to document: PDFDocument) {
-        document.addLineSeparator(PDFContainer.contentLeft, style: PDFReportingStyle.dividerLine)
-        // Title
-        document.add(space: 10.0)
-        document.set(.contentLeft, textColor: .black)
-        document.set(.contentLeft, font: PDFReportingStyle.title)
-        document.add(.contentLeft, text: "Kontoauszug")
-        document.add(space: 40.0)
+    public func addDocument(to document: PDFDocument) async {
+        PDFLogoImageHeader(logoImage: logoImage).addHeader(to: document)
+        addReport(to: document)
+        // concrete footer implementation
     }
 }

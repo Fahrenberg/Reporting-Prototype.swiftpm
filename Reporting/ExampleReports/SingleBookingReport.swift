@@ -10,14 +10,22 @@ import CoreGraphics
 import OSLog
 
 public struct SingleBookingReport: PDFReporting {
+    
     public let reportRecord: ReportRecord
     public var paperSize: PDFPageFormat = .a4
     public var landscape: Bool = false
+    private let logoImage = PlatformImage.image(named: "Reporting-Prototype-Icon.jpeg")!
+    
     
     public func addReport(to document: PDFDocument) {
         addFullReportInfo(to: document)
         addScans(to: document)
-
+    }
+    
+    public func addDocument(to document: PDFDocument) async {
+        PDFLogoImageHeader(logoImage: logoImage).addHeader(to: document)
+        addReport(to: document)
+        // concrete footer implementation
     }
     
     private let digitCellStyle = PDFTableCellStyle(font: PDFReportingStyle.digit)

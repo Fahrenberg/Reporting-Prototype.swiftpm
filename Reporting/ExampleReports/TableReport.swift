@@ -17,8 +17,10 @@ public struct TableReport: PDFReporting {
     let reportRecords: [ReportRecord]
     public var paperSize: PDFPageFormat = .a4
     public var landscape: Bool = false
+    private let logoImage = PlatformImage.image(named: "Reporting-Prototype-Icon.jpeg")!
     
     public func addReport(to document: PDFDocument) {
+        
         addPageHeader(to: document)
         // Add Record Table
         let table = PDFTable(rows: reportRecords.count + 2, columns: 4) // Records + 1 Header + 1 Footer
@@ -30,6 +32,11 @@ public struct TableReport: PDFReporting {
         document.add(table: table)
     }
     
+    public func addDocument(to document: PDFDocument) async {
+        PDFLogoImageHeader(logoImage: logoImage).addHeader(to: document)
+        addReport(to: document)
+        // concrete footer implementation
+    }
     
     private let logoSize = CGSize(width: 300, height: 70)
     private let dividerLineStyle = PDFLineStyle(type: .full, color: .darkGray, width: 0.5)

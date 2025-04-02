@@ -5,7 +5,7 @@ struct ExternalPDF: PDFReporting {
     public var paperSize: PDFPageFormat = .a4
     public var landscape: Bool = false
     
-    
+    // No document header or footer
     func addReport(to document: PDFDocument) {
         let bundle = Bundle.module
         guard let pdfURL = bundle.url(forResource: "roche", withExtension: "pdf")
@@ -14,5 +14,9 @@ struct ExternalPDF: PDFReporting {
             return }
         let pdf = PDFExternalDocument(url: pdfURL)
         document.add(externalDocument: pdf)
+    }
+    
+    public func addDocument(to document: PDFDocument) async {
+        addReport(to: document)
     }
 }

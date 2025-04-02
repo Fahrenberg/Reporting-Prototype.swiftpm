@@ -10,11 +10,6 @@ import TPPDF
 
 public protocol PDFReportingHeader {
     ///  Customised Report Header layout
-    ///
-    /// - If ommited, uses default header layout
-    ///
-    /// - Can be overwritten by concrete Report implementation
-    ///
     func addHeader(to document: PDFDocument)
 }
 

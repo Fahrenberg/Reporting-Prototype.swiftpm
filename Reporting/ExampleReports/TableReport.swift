@@ -35,7 +35,7 @@ public struct TableReport: PDFReporting {
     public func addDocument(to document: PDFDocument) async {
         PDFLogoImageHeader(logoImage: logoImage).addHeader(to: document)
         addReport(to: document)
-        // concrete footer implementation
+        PDFPaginatedFooter().addFooter(to: document)
     }
     
     private let logoSize = CGSize(width: 300, height: 70)

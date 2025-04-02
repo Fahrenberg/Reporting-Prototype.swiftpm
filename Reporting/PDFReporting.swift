@@ -17,15 +17,6 @@ public protocol PDFReporting {
     /// PDF Paper Orientation
     var landscape: Bool {get }
     
-    
-    /// Customised Document Footer layout
-    ///
-    /// - If ommited, uses default footer layout.
-    ///
-    /// - Can be overwritten by concrete Report implementation.
-    ///
-    func addFooter(to document: PDFDocument)
-    
     /// Adds report layout to PDFDocument
     ///
     /// Add one or mulitple report layouts into one PDFDocument
@@ -97,49 +88,6 @@ extension PDFReporting {
         await addDocument(to: document)
         return [document]
     }
-}
-
-extension PDFReporting {
- 
-    /// Default Document Footer layout
-    public func addFooter(to document: PDFDocument) {
-        document.set(textColor: .black)
-        // Footer text right
-        document.addLineSeparator(.footerCenter, style: PDFReportingStyle.dividerLine)
-        document.set(.footerRight, font: PDFReportingStyle.footerRegular)
-        let date = Date()
-        // Use the .dateTime format and localize to German
-        let formattedDate = date.formatted(
-            .dateTime
-                .day(.twoDigits)
-                .month(.twoDigits)
-                .year(.defaultDigits)
-                .hour(.defaultDigits(amPM: .abbreviated))
-                .minute(.defaultDigits)
-        )
-        
-        let footerRightText = "Druckdatum: \(formattedDate)"
-        document.add(.footerRight, text: footerRightText)
-        
-        // Pagination
-        let numberFormatter = NumberFormatter()
-        numberFormatter.numberStyle = .none
-        
-        let pagination = PDFPagination(
-            container: .footerCenter,
-            style: PDFPaginationStyle.customNumberFormat(template: "%@/%@",
-                                                         formatter: numberFormatter),
-            textAttributes: [.font: PDFReportingStyle.footerRegular,
-                             .foregroundColor: Color.black]
-        )
-        document.pagination = pagination
-        
-    }
-    /// Show Header and Footer (default)
-    ///
-    /// Can be overwritten by concrete Report implementation.
-    ///
-    public var showHeaderFooter: Bool { true }
 }
 
 

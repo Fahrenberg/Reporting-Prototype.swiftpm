@@ -45,7 +45,7 @@ struct PlaygroundReport: PDFReporting {
     
     private let lineStyle = PDFLineStyle(type: .full, color: .purple, width: 1.0)
    
-    func addReport(to document: PDFDocument) {
+    func addReport(to document: PDFDocument) async {
         let groupBorder = PDFGroup(
             allowsBreaks: true,
             backgroundColor: .clear,
@@ -106,7 +106,7 @@ struct PlaygroundReport: PDFReporting {
 }
 
 fileprivate struct PlaygroundFooter: PDFReportingFooter {
-    func add(to document: PDFDocument) {
+    func add(to document: PDFDocument) async {
         // Footer text right
         
         document.set(.footerRight, font: PDFReportingStyle.title)

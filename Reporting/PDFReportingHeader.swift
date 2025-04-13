@@ -10,18 +10,18 @@ import TPPDF
 
 public protocol PDFReportingHeader {
     ///  Customised Report Header layout
-    func add(to document: PDFDocument)
+    func add(to document: PDFDocument) async
 }
 
 public struct PDFEmptyHeader: PDFReportingHeader {
-    public func add(to document: PDFDocument) {}
+    public func add(to document: PDFDocument) async {}
 }
 
 public struct PDFLogoImageHeader: PDFReportingHeader {
     ///  Report Logo shown in  header
     public let logoImage: PlatformImage
     /// Logo Header Implementation
-    public func add(to document: PDFDocument) {
+    public func add(to document: PDFDocument) async {
         let logoSize = CGSize(width: 300, height: 70)
         var logo: PDFImage {
             guard let resizedImage = logoImage.resized(to: logoSize, alignment: .right)

@@ -78,9 +78,9 @@ extension PDFReporting {
     /// Complete document with optional document header and footer
     /// Content added with addReport
     func addDocument(to document: PDFDocument) async {
-        pdfHeader.add(to: document)
+        await pdfHeader.add(to: document)
         await addReport(to: document)
-        pdfFooter.add(to: document)
+        await pdfFooter.add(to: document)
     }
     
     

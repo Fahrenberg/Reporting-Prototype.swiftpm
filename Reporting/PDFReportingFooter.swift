@@ -11,15 +11,15 @@ import TPPDF
 
 public protocol PDFReportingFooter {
     ///  Customised Report Footer layout
-    func add(to document: PDFDocument)
+    func add(to document: PDFDocument) async
 }
 
 public struct PDFEmptyFooter: PDFReportingFooter {
-    public func add(to document: PDFDocument) {}
+    public func add(to document: PDFDocument) async {}
 }
 
-public struct PDFPaginatedFooter: PDFReportingFooter {
-    public func add(to document: PDFDocument) {
+public struct PDFPaginatedFooter: PDFReportingFooter  {
+    public func add(to document: PDFDocument) async {
         document.set(textColor: .black)
         // Footer text right
         document.addLineSeparator(.footerCenter, style: PDFReportingStyle.dividerLine)

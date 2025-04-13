@@ -47,10 +47,10 @@ public struct SingleBookingReport: PDFReporting {
     }
     
     private var cashFlowFormatted: String {
-            reportRecord.cashFlow
+        reportRecord.record.cashFlow.rawValue
     }
     private var amountFormatted: String { 
-        let amountValue = Decimal(reportRecord.amount) // Ensure Decimal type
+        let amountValue = Decimal(reportRecord.record.amount) // Ensure Decimal type
         return "CHF " + amountValue.formatted(
             .number
             .precision(.fractionLength(2...2))
@@ -60,11 +60,11 @@ public struct SingleBookingReport: PDFReporting {
     private var dateFormatted: String {
         let style = Date.FormatStyle(date: .long, time: .omitted)
             .locale(Locale(identifier: "de-CH"))
-        return reportRecord.date.formatted(style)
+        return reportRecord.record.date.formatted(style)
     }
     private var iconImage: PlatformImage {
         let symbolSize = CGSize(width: 30, height: 30)
-        let symbolImage = UIImage(systemName: reportRecord.icon) ?? UIImage(systemName: "questionmark")!
+        let symbolImage = UIImage(systemName: reportRecord.record.icon) ?? UIImage(systemName: "questionmark")!
         guard let resizedImage = symbolImage.resized(to: symbolSize, alignment: .left)
         else { fatalError() }
         let finalImage = resizedImage.fillFrame(frameColor: .white).addFrame(frameColor: .lightGray)
@@ -87,7 +87,7 @@ public struct SingleBookingReport: PDFReporting {
         row2Table.widths = [0.1, 0.6, 0.3]
         row2Table.style = rowTableStyle
         let row2 = row2Table[row: 0]
-        row2.content = [iconImage, reportRecord.text, amountFormatted]
+        row2.content = [iconImage, reportRecord.record.longText, amountFormatted]
         row2.style = [regularTextCellStyle, regularTextCellStyle, digitCellStyle]
         row2.alignment = [.left, .left, .right] 
         // Set table padding and margin
@@ -102,7 +102,7 @@ public struct SingleBookingReport: PDFReporting {
         document.addLineSeparator(PDFContainer.contentLeft, style: PDFReportingStyle.dividerLine)
         document.add(space: 5.0)
         document.set(font: PDFReportingStyle.regular)
-        document.add(.contentLeft, text: "\(reportRecord.text) (\(scanPage)/\(allScanPages))")
+        document.add(.contentLeft, text: "\(reportRecord.record.longText) (\(scanPage)/\(allScanPages))")
         document.add(space: 50.0)
         document.addLineSeparator(PDFContainer.contentLeft, style: PDFReportingStyle.dividerLine)
         document.add(space: 10.0)

@@ -66,7 +66,7 @@ struct ContentView: View {
                 pdfHeader: PDFLogoImageHeader(logoImage: trafinaLogo)
             )
         case .TableReport:
-            report = TableReport(
+            report = PDFRecordTable(
                 reportRecords: ReportRecords.mocks()
             )
         case .ExternalPDF:

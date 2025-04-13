@@ -27,7 +27,7 @@ public struct FullReport: PDFReporting {
     
     public  func addReport(to document: PDFDocument) {
         let reportRecords = ReportRecords.mocks()
-        let table = TableReport(reportRecords: reportRecords)
+        let table = PDFRecordTable(reportRecords: reportRecords)
         table.addReport(to: document)
         
         for reportRecord in reportRecords {

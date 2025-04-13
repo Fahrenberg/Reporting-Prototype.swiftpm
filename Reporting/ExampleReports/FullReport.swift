@@ -34,10 +34,4 @@ public struct FullReport: PDFReporting {
             SingleBookingReport(reportRecord: reportRecord).addReport(to: document)
         }
     }
-    
-    public func addDocument(to document: PDFDocument) async {
-        pdfHeader.add(to: document)
-        addReport(to: document)
-        pdfFooter.add(to: document)
-    }
 }

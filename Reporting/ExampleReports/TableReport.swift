@@ -36,11 +36,6 @@ public struct TableReport: PDFReporting {
         document.add(table: table)
     }
     
-    public func addDocument(to document: PDFDocument) async {
-        pdfHeader.add(to: document)
-        addReport(to: document)
-        pdfFooter.add(to: document)
-    }
     
     private let logoSize = CGSize(width: 300, height: 70)
     private let dividerLineStyle = PDFLineStyle(type: .full, color: .darkGray, width: 0.5)

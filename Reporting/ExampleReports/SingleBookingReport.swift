@@ -25,12 +25,6 @@ public struct SingleBookingReport: PDFReporting {
         addScans(to: document)
     }
     
-    public func addDocument(to document: PDFDocument) async {
-        pdfHeader.add(to: document)
-        addReport(to: document)
-        pdfFooter.add(to: document)
-    }
-    
     private let digitCellStyle = PDFTableCellStyle(font: PDFReportingStyle.digit)
     private let boldTextCellStyle = PDFTableCellStyle(font: PDFReportingStyle.bold)
     private let regularTextCellStyle = PDFTableCellStyle(font: PDFReportingStyle.regular)

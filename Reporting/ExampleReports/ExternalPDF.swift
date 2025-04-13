@@ -18,10 +18,4 @@ struct ExternalPDF: PDFReporting {
         let pdf = PDFExternalDocument(url: pdfURL)
         document.add(externalDocument: pdf)
     }
-    
-    public func addDocument(to document: PDFDocument) async {
-        pdfHeader.add(to: document)
-        addReport(to: document)
-        pdfFooter.add(to: document)
-    }
 }

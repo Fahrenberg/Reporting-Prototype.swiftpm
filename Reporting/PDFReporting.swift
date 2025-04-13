@@ -31,11 +31,6 @@ public protocol PDFReporting {
   
     /// Set PDF document footer
     var pdfFooter: PDFReportingFooter { get }
-    
-    /// Complete document with optional document header and footer
-    /// Content added with addReport
-    func addDocument(to document: PDFDocument) async
-    
 }
 extension PDFReporting {
     /// Create PDF reporting data using the layout from addReport
@@ -79,6 +74,16 @@ extension PDFReporting {
         }
         return data.write(ext: "pdf")
     }
+    
+    /// Complete document with optional document header and footer
+    /// Content added with addReport
+    func addDocument(to document: PDFDocument) async {
+        pdfHeader.add(to: document)
+        await addReport(to: document)
+        pdfFooter.add(to: document)
+    }
+    
+    
 }
 
 

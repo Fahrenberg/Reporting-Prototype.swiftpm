@@ -103,12 +103,6 @@ struct PlaygroundReport: PDFReporting {
         let externalPDF = ExternalPDF()
         externalPDF.addReport(to: document)        
     }
- 
-    public func addDocument(to document: PDFDocument) async {
-        pdfHeader.add(to: document)
-        addReport(to: document)
-        pdfFooter.add(to: document)
-    }
 }
 
 fileprivate struct PlaygroundFooter: PDFReportingFooter {

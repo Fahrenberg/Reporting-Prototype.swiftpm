@@ -22,6 +22,8 @@ public struct FullReport: PDFReporting {
         logoImage: PlatformImage.image(named: "Reporting-Prototype-Icon.jpeg")!
         )
     
+    public let pdfFooter: PDFReportingFooter = PDFPaginatedFooter()
+    
     public  func addReport(to document: PDFDocument) {
         let reportRecords = ReportRecords.mocks()
         let table = TableReport(reportRecords: reportRecords)
@@ -36,6 +38,6 @@ public struct FullReport: PDFReporting {
     public func addDocument(to document: PDFDocument) async {
         pdfHeader.add(to: document)
         addReport(to: document)
-        PDFPaginatedFooter().addFooter(to: document)
+        pdfFooter.add(to: document)
     }
 }

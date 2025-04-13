@@ -13,6 +13,7 @@ struct PlaygroundReport: PDFReporting {
     public var landscape: Bool = false
     
     public let pdfHeader: PDFReportingHeader = PDFEmptyHeader()
+    public let pdfFooter: PDFReportingFooter = PDFEmptyFooter()
     
     func addFooter(to document: PDFDocument) {
         // Footer text right
@@ -131,5 +132,6 @@ struct PlaygroundReport: PDFReporting {
     public func addDocument(to document: PDFDocument) async {
         pdfHeader.add(to: document)
         addReport(to: document)
+        pdfFooter.add(to: document)
     }
 }

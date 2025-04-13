@@ -20,6 +20,9 @@ public struct TableReport: PDFReporting {
     public let pdfHeader: PDFReportingHeader = PDFLogoImageHeader(
         logoImage: PlatformImage.image(named: "Reporting-Prototype-Icon.jpeg")!
         )
+    
+    public let pdfFooter: PDFReportingFooter = PDFPaginatedFooter()
+    
     public func addReport(to document: PDFDocument) {
         
         addPageHeader(to: document)
@@ -36,7 +39,7 @@ public struct TableReport: PDFReporting {
     public func addDocument(to document: PDFDocument) async {
         pdfHeader.add(to: document)
         addReport(to: document)
-        PDFPaginatedFooter().addFooter(to: document)
+        pdfFooter.add(to: document)
     }
     
     private let logoSize = CGSize(width: 300, height: 70)

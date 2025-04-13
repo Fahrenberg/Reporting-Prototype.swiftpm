@@ -28,6 +28,9 @@ public protocol PDFReporting {
     
     /// Set PDF document header
     var pdfHeader: PDFReportingHeader { get }
+  
+    /// Set PDF document footer
+    var pdfFooter: PDFReportingFooter { get }
     
     /// Complete document with optional document header and footer
     /// Content added with addReport

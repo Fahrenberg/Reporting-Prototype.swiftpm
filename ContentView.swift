@@ -61,11 +61,14 @@ struct ContentView: View {
         case .PlaygroundReport:
             report = PlaygroundReport()
         case .FullReport:
-            report = FullReport(pdfHeader: PDFLogoImageHeader(
-                logoImage: trafinaLogo
-                ))
+            report = FullReport(
+                reportRecords: ReportRecords.mocks(),
+                pdfHeader: PDFLogoImageHeader(logoImage: trafinaLogo)
+            )
         case .TableReport:
-            report = TableReport(reportRecords: ReportRecords.mocks() )
+            report = TableReport(
+                reportRecords: ReportRecords.mocks()
+            )
         case .ExternalPDF:
             report = ExternalPDF()
         }

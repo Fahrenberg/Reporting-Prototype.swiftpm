@@ -1,6 +1,6 @@
 //
-//  MultipleLargeImageReport.swift
-//  PDF-Reporting
+//  PDFFullReport.swift
+//  Reporting
 //
 //  Created by Jean-Nicolas on 31.01.2025.
 //
@@ -20,13 +20,12 @@ public struct PDFFullReport: PDFReporting {
     public var landscape: Bool = false
    
     public var pdfHeader: PDFReportingHeader = PDFLogoImageHeader(
-        logoImage: PlatformImage.image(named: "Reporting-Prototype-Icon.jpeg")!
+        logoImage: PlatformImage.image(named: "ReportingDefaultLogo.png")!
         )
     
     public let pdfFooter: PDFReportingFooter = PDFPaginatedFooter()
     
     public  func addReport(to document: PDFDocument) async {
-        let reportRecords = ReportRecords.mocks()
         let table = PDFRecordTable(reportRecords: reportRecords)
         table.addReport(to: document)
         

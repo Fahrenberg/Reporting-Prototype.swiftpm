@@ -10,37 +10,12 @@ import CoreGraphics
 
 struct PlaygroundReport: PDFReporting {
     public var paperSize: PDFPageFormat = .a4
-    public var landscape: Bool = false
+    public var landscape: Bool = true
     
-    public let pdfHeader: PDFReportingHeader = PDFEmptyHeader()
-    public let pdfFooter: PDFReportingFooter = PDFEmptyFooter()
+    let pdfHeader: PDFReportingHeader = PDFEmptyHeader()
+    let pdfFooter: PDFReportingFooter = PlaygroundFooter()
     
-    func addFooter(to document: PDFDocument) {
-        // Footer text right
-        
-        document.set(.footerRight, font: PDFReportingStyle.title)
-        
-        let footerRightText = "PlaygroundReport"
-        document.add(.footerRight, text: footerRightText)
-        document.set(.footerCenter, font: PDFReportingStyle.title)
-        // Pagination
-        let numberFormatter = NumberFormatter()
-        numberFormatter.numberStyle = .none
-        
-        let pagination = PDFPagination(
-            container: .footerCenter,
-            style: PDFPaginationStyle.customNumberFormat(template: "%@/%@",
-                                                         formatter: numberFormatter),
-            textAttributes: [
-                .font: PDFReportingStyle.title,
-                .foregroundColor: Color.red,
-                    ]
-        )
-        
-        
-        document.pagination = pagination
-        
-    }
+    
     
     
     // Scans
@@ -133,5 +108,34 @@ struct PlaygroundReport: PDFReporting {
         pdfHeader.add(to: document)
         addReport(to: document)
         pdfFooter.add(to: document)
+    }
+}
+
+fileprivate struct PlaygroundFooter: PDFReportingFooter {
+    func add(to document: PDFDocument) {
+        // Footer text right
+        
+        document.set(.footerRight, font: PDFReportingStyle.title)
+        
+        let footerRightText = "PlaygroundReport"
+        document.add(.footerRight, text: footerRightText)
+        document.set(.footerCenter, font: PDFReportingStyle.title)
+        // Pagination
+        let numberFormatter = NumberFormatter()
+        numberFormatter.numberStyle = .none
+        
+        let pagination = PDFPagination(
+            container: .footerCenter,
+            style: PDFPaginationStyle.customNumberFormat(template: "%@/%@",
+                                                         formatter: numberFormatter),
+            textAttributes: [
+                .font: PDFReportingStyle.title,
+                .foregroundColor: Color.red,
+                    ]
+        )
+        
+        
+        document.pagination = pagination
+        
     }
 }

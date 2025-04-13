@@ -51,14 +51,19 @@ struct ContentView: View {
     // Example function to load PDF data
     private func loadSamplePDF(reportType: ReportType) async {
         pdfData = Data()
+        let trafinaLogo = PlatformImage.image(named: "TrafinaLogo.jpeg")!
         var report: PDFReporting?
         switch reportType {
         case .SingleBookingReport:
-            report =  SingleBookingReport(reportRecord: ReportRecord.mock(scanCount: 6))
+            report =  SingleBookingReport(
+                reportRecord: ReportRecord.mock(scanCount: 6)
+            )
         case .PlaygroundReport:
             report = PlaygroundReport()
         case .FullReport:
-            report = FullReport()
+            report = FullReport(pdfHeader: PDFLogoImageHeader(
+                logoImage: trafinaLogo
+                ))
         case .TableReport:
             report = TableReport(reportRecords: ReportRecords.mocks() )
         case .ExternalPDF:

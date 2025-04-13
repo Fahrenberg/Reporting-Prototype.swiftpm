@@ -48,7 +48,7 @@ public struct PDFBooking: PDFReporting {
 
     }
     public var pdfHeader: PDFReportingHeader = PDFLogoImageHeader(
-        logoImage: PlatformImage.image(named: "Reporting-Prototype-Icon.jpeg")!
+        logoImage: PlatformImage.image(named: "ReportingDefaultLogo.png")!
         )
     
     public let pdfFooter: PDFReportingFooter = PDFPaginatedFooter()

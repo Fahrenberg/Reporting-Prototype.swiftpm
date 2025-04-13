@@ -25,14 +25,15 @@ public struct FullReport: PDFReporting {
     
     public let pdfFooter: PDFReportingFooter = PDFPaginatedFooter()
     
-    public  func addReport(to document: PDFDocument) {
+    public  func addReport(to document: PDFDocument) async {
         let reportRecords = ReportRecords.mocks()
         let table = PDFRecordTable(reportRecords: reportRecords)
         table.addReport(to: document)
         
         for reportRecord in reportRecords {
             document.createNewPage()
-            SingleBookingReport(reportRecord: reportRecord).addReport(to: document)
+            let pdfBooking = PDFBooking(reportRecord: reportRecord)
+            await pdfBooking.addReport(to: document)
         }
     }
 }

@@ -9,21 +9,49 @@ import Extensions
 import CoreGraphics
 import OSLog
 
-public struct SingleBookingReport: PDFReporting {
+//
+//  PDFBooking.swift
+//  Reporting
+//
+//  Created by Jean-Nicolas on 12.03.2025.
+//
+
+#if os(iOS)
+import UIKit
+#elseif os(macOS)
+import AppKit
+#endif
+import TPPDF
+import ImageCompressionKit
+import Extensions
+import CoreGraphics
+import OSLog
+
+public struct PDFBooking: PDFReporting {
     public let reportRecord: ReportRecord
-    public var paperSize: PDFPageFormat = .a4
-    public var landscape: Bool = false
+    public let paperSize: PDFPageFormat
+    public let landscape: Bool
     
+    public init(reportRecord: ReportRecord,
+                paperSize: PDFPageFormat = .a4,
+                landscape: Bool = false
+            )
+    {
+        self.reportRecord = reportRecord
+        self.paperSize = paperSize
+        self.landscape = landscape
+    }
+    
+    public func addReport(to document: PDFDocument) async {
+        addFullReportInfo(to: document)
+        await addScans(to: document)
+
+    }
     public var pdfHeader: PDFReportingHeader = PDFLogoImageHeader(
         logoImage: PlatformImage.image(named: "Reporting-Prototype-Icon.jpeg")!
         )
     
     public let pdfFooter: PDFReportingFooter = PDFPaginatedFooter()
-    
-    public func addReport(to document: PDFDocument) {
-        addFullReportInfo(to: document)
-        addScans(to: document)
-    }
     
     private let digitCellStyle = PDFTableCellStyle(font: PDFReportingStyle.digit)
     private let boldTextCellStyle = PDFTableCellStyle(font: PDFReportingStyle.bold)
@@ -39,8 +67,8 @@ public struct SingleBookingReport: PDFReporting {
         CGSize(width: document.layout.width
                - document.layout.margin.left
                - document.layout.margin.right,
-               height: document.layout.height 
-               - document.layout.margin.top 
+               height: document.layout.height
+               - document.layout.margin.top
                - document.layout.margin.bottom
                - 210 // Report info & header
         )
@@ -49,7 +77,7 @@ public struct SingleBookingReport: PDFReporting {
     private var cashFlowFormatted: String {
         reportRecord.record.cashFlow.rawValue
     }
-    private var amountFormatted: String { 
+    private var amountFormatted: String {
         let amountValue = Decimal(reportRecord.record.amount) // Ensure Decimal type
         return "CHF " + amountValue.formatted(
             .number
@@ -63,11 +91,11 @@ public struct SingleBookingReport: PDFReporting {
         return reportRecord.record.date.formatted(style)
     }
     private var iconImage: PlatformImage {
-        let symbolSize = CGSize(width: 30, height: 30)
-        let symbolImage = UIImage(systemName: reportRecord.record.icon) ?? UIImage(systemName: "questionmark")!
+        let symbolSize = CGSize(width: 20, height: 20)
+        let symbolImage = PlatformImage(systemName: reportRecord.record.icon) ?? PlatformImage(systemName: "questionmark")!
         guard let resizedImage = symbolImage.resized(to: symbolSize, alignment: .left)
         else { fatalError() }
-        let finalImage = resizedImage.fillFrame(frameColor: .white).addFrame(frameColor: .lightGray)
+        let finalImage = resizedImage.fillFrame(frameColor: .white)
         return finalImage
     }
     
@@ -89,7 +117,7 @@ public struct SingleBookingReport: PDFReporting {
         let row2 = row2Table[row: 0]
         row2.content = [iconImage, reportRecord.record.longText, amountFormatted]
         row2.style = [regularTextCellStyle, regularTextCellStyle, digitCellStyle]
-        row2.alignment = [.left, .left, .right] 
+        row2.alignment = [.left, .left, .right]
         // Set table padding and margin
         document.add(table: row2Table)
         
@@ -108,17 +136,18 @@ public struct SingleBookingReport: PDFReporting {
         document.add(space: 10.0)
     }
     
-    private func addScans(to document: PDFDocument) {
+    private func addScans(to document: PDFDocument) async {
         document.add(space: 10.0)
-        
-        switch reportRecord.scansData.count {
+        let scansData = await reportRecord.scansData
+            
+        switch scansData.count {
         case 0:
             NoScan(document: document)
         case 1:
-            OneScan(document: document)
+            await OneScan(document: document)
 
         default:
-            TwoByTwoScans(document: document)
+            await TwoByTwoScans(document: document)
         }
     }
     
@@ -127,20 +156,20 @@ public struct SingleBookingReport: PDFReporting {
         else {
             let topSpacer = scansSize(document: document).height / 2
             document.add(.contentCenter ,space: topSpacer)
-            document.add(.contentCenter, text: "No Scans") 
+            document.add(.contentCenter, text: "No Scans")
             return
         }
         document.add(.contentCenter ,space: 100)
         document.add(.contentCenter, image: PDFImage(image: noScanSymbol))
     }
     
-    private func OneScan(document: PDFDocument) {
+    private func OneScan(document: PDFDocument) async {
         let topSpacer = scansSize(document: document).height / 2 - 20
         document.add(.contentCenter ,space: topSpacer)
         document.add(.contentCenter ,text: "One Scan")
     }
 
-    private func TwoByTwoScans(document: PDFDocument) {
+    private func TwoByTwoScans(document: PDFDocument) async {
         /// Four scans (2x2) per page, 5 point spacer between scans
         let spacer: Double = 5
         let scanWidth = scansSize(document: document).width / 2 - spacer
@@ -148,7 +177,8 @@ public struct SingleBookingReport: PDFReporting {
         
         
         let scanSize = CGSize(width: scanWidth, height: scanHeight)
-        let pdfImages: [PlatformImage] = reportRecord.scansData.compactMap { data in
+        let scansData = await reportRecord.scansData
+        let pdfImages: [PlatformImage] = scansData.compactMap { data in
             guard let resizedImage = PlatformImage(data: data)?.resized(to: scanSize) else {return nil}
             return resizedImage.fillFrame().addFrame()
         }
@@ -208,4 +238,5 @@ fileprivate var rowTableStyle: PDFTableStyle {
         alternatingContentStyle: nil
     )
 }
+
 

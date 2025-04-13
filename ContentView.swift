@@ -55,7 +55,7 @@ struct ContentView: View {
         var report: PDFReporting?
         switch reportType {
         case .SingleBookingReport:
-            report =  SingleBookingReport(
+            report =  PDFBooking(
                 reportRecord: ReportRecord.mock(scanCount: 6)
             )
         case .PlaygroundReport:

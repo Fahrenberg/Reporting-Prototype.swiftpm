@@ -12,15 +12,6 @@ import UIKit
 #elseif canImport(AppKit)
 import AppKit
 #endif
-/*
- public let pdfHeader: PDFReportingHeader = PDFLogoImageHeader(
-     logoImage: PlatformImage.image(named: "Reporting-Prototype-Icon.jpeg")!
-     )
- 
- public let pdfFooter: PDFReportingFooter = PDFPaginatedFooter()
- 
- */
-
 
 struct PDFRecordTable: PDFReporting {
     public let reportRecords: [ReportRecord]

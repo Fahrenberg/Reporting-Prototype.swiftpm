@@ -85,7 +85,6 @@ extension PDFReporting {
     
     /// Default implementation of pdfHeader
     var pdfHeader: PDFReportingHeader {
-           // Return a default implementation or an empty PDFReportingHeader if needed
            return PDFEmptyHeader()
        }
     

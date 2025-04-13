@@ -13,11 +13,15 @@ public protocol PDFReportingFooter {
     ///  Customised Report Footer layout
     func add(to document: PDFDocument) async
 }
-
+/// Empty footer
+///
+/// - For printing external PDF.
+/// - Skips pdf footer area .
 public struct PDFEmptyFooter: PDFReportingFooter {
     public func add(to document: PDFDocument) async {}
 }
 
+/// Default footer with page numbers and printing date
 public struct PDFPaginatedFooter: PDFReportingFooter  {
     public func add(to document: PDFDocument) async {
         document.set(textColor: .black)

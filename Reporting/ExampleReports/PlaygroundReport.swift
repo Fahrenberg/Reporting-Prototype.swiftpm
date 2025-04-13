@@ -15,9 +15,6 @@ struct PlaygroundReport: PDFReporting {
     let pdfHeader: PDFReportingHeader = PDFEmptyHeader()
     let pdfFooter: PDFReportingFooter = PlaygroundFooter()
     
-    
-    
-    
     // Scans
     private func scansSize(document: PDFDocument) -> CGSize  {
         let documentContentWidth = document.layout.width

@@ -10,12 +10,13 @@ import CoreGraphics
 import OSLog
 
 public struct SingleBookingReport: PDFReporting {
-    
     public let reportRecord: ReportRecord
     public var paperSize: PDFPageFormat = .a4
     public var landscape: Bool = false
-    private let logoImage = PlatformImage.image(named: "Reporting-Prototype-Icon.jpeg")!
     
+    public let pdfHeader: PDFReportingHeader = PDFLogoImageHeader(
+        logoImage: PlatformImage.image(named: "Reporting-Prototype-Icon.jpeg")!
+        )
     
     public func addReport(to document: PDFDocument) {
         addFullReportInfo(to: document)
@@ -23,7 +24,7 @@ public struct SingleBookingReport: PDFReporting {
     }
     
     public func addDocument(to document: PDFDocument) async {
-        PDFLogoImageHeader(logoImage: logoImage).addHeader(to: document)
+        pdfHeader.add(to: document)
         addReport(to: document)
         PDFPaginatedFooter().addFooter(to: document)
     }

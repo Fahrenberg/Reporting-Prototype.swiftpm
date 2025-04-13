@@ -26,6 +26,9 @@ public protocol PDFReporting {
     ///
     func addReport(to document: PDFDocument) async
     
+    /// Set PDF document header
+    var pdfHeader: PDFReportingHeader { get }
+    
     /// Complete document with optional document header and footer
     /// Content added with addReport
     func addDocument(to document: PDFDocument) async

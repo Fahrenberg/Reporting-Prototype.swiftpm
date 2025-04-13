@@ -12,6 +12,8 @@ struct PlaygroundReport: PDFReporting {
     public var paperSize: PDFPageFormat = .a4
     public var landscape: Bool = false
     
+    public let pdfHeader: PDFReportingHeader = PDFEmptyHeader()
+    
     func addFooter(to document: PDFDocument) {
         // Footer text right
         
@@ -127,6 +129,7 @@ struct PlaygroundReport: PDFReporting {
     }
  
     public func addDocument(to document: PDFDocument) async {
+        pdfHeader.add(to: document)
         addReport(to: document)
     }
 }

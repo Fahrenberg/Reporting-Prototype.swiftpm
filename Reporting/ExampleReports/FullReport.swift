@@ -17,6 +17,10 @@ import Extensions
 public struct FullReport: PDFReporting {
     public var paperSize: PDFPageFormat = .a4
     public var landscape: Bool = false
+   
+    public let pdfHeader: PDFReportingHeader = PDFLogoImageHeader(
+        logoImage: PlatformImage.image(named: "Reporting-Prototype-Icon.jpeg")!
+        )
     
     public  func addReport(to document: PDFDocument) {
         let reportRecords = ReportRecords.mocks()
@@ -30,7 +34,7 @@ public struct FullReport: PDFReporting {
     }
     
     public func addDocument(to document: PDFDocument) async {
-        PDFLogoImageHeader(logoImage: logoImage).addHeader(to: document)
+        pdfHeader.add(to: document)
         addReport(to: document)
         PDFPaginatedFooter().addFooter(to: document)
     }

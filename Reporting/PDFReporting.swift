@@ -38,26 +38,27 @@ public protocol PDFReporting {
     
 }
 extension PDFReporting {
-    /// Create Data from PDFDocument
+    /// Create PDF reporting data using the layout from addReport
+    ///
+    /// - Create an instance of PDFDocument with basic layout definition.
+    /// - Define all pdf elements in addReport
+    /// - `papersize` sets pdf paper size.
+    /// - `landscape` sets print orientation.
+    /// - White paper background and black printing.
     ///
     /// - Parameters:
     ///     -  debugFrame: shows dotted lines around PDF elements.
     ///                    default == `false`
     ///
     public func data(debugFrame: Bool = false) async -> Data? {
-        let pdfDocuments = await generateDocument()
-        let generator: PDFGeneratorProtocol?  // Define generator variable outside switch
-        
-        switch pdfDocuments.count {
-        case 0:
-            return nil
-        case 1:
-            generator = PDFGenerator(document: pdfDocuments.first!)
-        case let count where count > 1:
-            generator = PDFMultiDocumentGenerator(documents: pdfDocuments)
-        default:
-            return nil
+        let pdfDocument = PDFDocument(format: paperSize)
+        if landscape {
+            pdfDocument.layout.size = paperSize.landscapeSize
         }
+        pdfDocument.background.color = .white
+        await addDocument(to: pdfDocument)
+        let generator: PDFGeneratorProtocol?  // Define generator variable outside switch
+        generator = PDFGenerator(document: pdfDocument)
         
         guard let generator = generator else { // Use the generator safely
             return nil
@@ -77,22 +78,6 @@ extension PDFReporting {
             return nil
         }
         return data.write(ext: "pdf")
-    }
-    
-    /// Generates a instance of PDFDocument with basic layout definition
-    ///
-    /// Papersize from Report `papersize`
-    /// Print orientation from Repor `landscape`.
-    /// White paper background and black printing.
-    ///
-    func generateDocument() async -> [PDFDocument] {
-        let document = PDFDocument(format: paperSize)
-        if landscape {
-            document.layout.size = paperSize.landscapeSize
-        }
-        document.background.color = .white
-        await addDocument(to: document)
-        return [document]
     }
 }
 

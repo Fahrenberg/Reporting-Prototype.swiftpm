@@ -12,7 +12,6 @@ struct PlaygroundReport: PDFReporting {
     public var paperSize: PDFPageFormat = .a4
     public var landscape: Bool = true
     
-    let pdfHeader: PDFReportingHeader = PDFEmptyHeader()
     let pdfFooter: PDFReportingFooter = PlaygroundFooter()
     
     // Scans

@@ -2,8 +2,6 @@ import SwiftUI
 import TPPDF
 
 struct ExternalPDF: PDFReporting {
-    public let pdfHeader: PDFReportingHeader = PDFEmptyHeader()
-    public let pdfFooter: PDFReportingFooter = PDFEmptyFooter()
     
     public var paperSize: PDFPageFormat = .a4
     public var landscape: Bool = false

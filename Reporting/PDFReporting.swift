@@ -83,7 +83,16 @@ extension PDFReporting {
         await pdfFooter.add(to: document)
     }
     
+    /// Default implementation of pdfHeader
+    var pdfHeader: PDFReportingHeader {
+           // Return a default implementation or an empty PDFReportingHeader if needed
+           return PDFEmptyHeader()
+       }
     
+    /// Default implementation of pdfFooter
+    var pdfFooter: PDFReportingFooter {
+        PDFEmptyFooter()
+    }
 }
 
 

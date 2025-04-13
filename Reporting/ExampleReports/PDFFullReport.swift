@@ -14,7 +14,7 @@ import TPPDF
 import ImageCompressionKit
 import Extensions
 
-public struct FullReport: PDFReporting {
+public struct PDFFullReport: PDFReporting {
     public let reportRecords: [ReportRecord]
     public var paperSize: PDFPageFormat = .a4
     public var landscape: Bool = false

@@ -88,7 +88,7 @@ extension PDFReporting {
     func generateDocument() async -> [PDFDocument] {
         let document = PDFDocument(format: paperSize)
         if landscape {
-            document.layout.size = PDFPageFormat.a4.landscapeSize
+            document.layout.size = paperSize.landscapeSize
         }
         document.background.color = .white
         await addDocument(to: document)

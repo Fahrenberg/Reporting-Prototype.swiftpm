@@ -18,7 +18,7 @@ public struct FullReport: PDFReporting {
     public var paperSize: PDFPageFormat = .a4
     public var landscape: Bool = false
    
-    public let pdfHeader: PDFReportingHeader = PDFLogoImageHeader(
+    public var pdfHeader: PDFReportingHeader = PDFLogoImageHeader(
         logoImage: PlatformImage.image(named: "Reporting-Prototype-Icon.jpeg")!
         )
     

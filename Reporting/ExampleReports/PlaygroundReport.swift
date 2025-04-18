@@ -77,39 +77,29 @@ struct PlaygroundReport: PDFReporting {
     }
     
     func addReport(to document: PDFDocument) async {
-        let groupBorder = PDFGroup(
-            allowsBreaks: true,
-            backgroundColor: .clear,
-            outline: lineStyle,
-            padding: EdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
-        )
-            .addBorderShapeRectangle(size: scansSize(document: document), color: .blue)
         
-        for _ in 0..<5 {
-            groupBorder.add(attributedText: attributedString)
-        }
+        // PDFTable with attributed string
         document.add(text: "--- first start ---- ")
-        document.add(group: groupBorder)
-        document.add(space: 50)
-                document.add(text: "--- first end ---- ")
+        
+        let table = PDFTable(rows: 5, columns: 2)
+        table.style = PDFTableStyle()
+        table.padding = 2.0
         
         
+        
+        for row in 0..<5 {
+            let currentRow = table[row: row]
+            currentRow.content = [attributedString, ""]
+        }
+        document.add(.contentLeft, table: table)
+        document.add(text: "--- first end ---- ")
+        
+        // Attributed string to PDFDocument
         document.createNewPage()
         document.add(text: "--- second start ---- ")
-
-        let groupOutline = PDFGroup(
-            allowsBreaks: true,
-            backgroundColor: .clear,
-            outline: lineStyle,
-            padding: EdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
-        )
-            .addBorderShapeRectangle(size: scansSize(document: document), color: .blue)
-        
         for _ in 0..<5 {
-            groupOutline.add(image: logo)
+            document.add(attributedText: attributedString)
         }
-        document.add(group: groupOutline)
-        document.add(space: 10)
         document.add(text: "--- second finished ---- ")
         
         

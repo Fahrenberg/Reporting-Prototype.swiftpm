@@ -56,14 +56,14 @@ struct ContentView: View {
         switch reportType {
         case .SingleBookingReport:
             report =  PDFBooking(
-                reportRecord: ReportRecord.mock(scanCount: 6)
+                reportRecord: ReportRecord.mock(scanCount: 6) // using default header
             )
         case .PlaygroundReport:
-            report = PlaygroundReport()
+            report = PlaygroundReport() // using no header
         case .FullReport:
             report = PDFFullReport(
                 reportRecords: ReportRecords.mocks(),
-                pdfHeader: PDFLogoImageHeader(logoImage: trafinaLogo)
+                pdfHeader: PDFLogoImageHeader(logoImage: trafinaLogo) // overwriting header for PDFFullReport
             )
         case .TableReport:
             report = PDFRecordTable(

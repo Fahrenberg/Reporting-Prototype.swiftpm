@@ -40,7 +40,7 @@ public func allImageData() -> [Data] {
 
 public var logoImage: PlatformImage {
     let bundle = Bundle.module
-    let imageURL = bundle.url(forResource: "Reporting-Prototype-Icon", withExtension: "jpeg")!
+    let imageURL = bundle.url(forResource: "ReportingDefaultLogo", withExtension: "png")!
     let data =  try! Data(contentsOf: imageURL)
     return PlatformImage(data: data)!
 }

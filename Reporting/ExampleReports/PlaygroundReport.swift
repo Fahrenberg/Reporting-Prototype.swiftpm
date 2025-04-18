@@ -41,6 +41,41 @@ struct PlaygroundReport: PDFReporting {
     
     private let lineStyle = PDFLineStyle(type: .full, color: .purple, width: 1.0)
    
+    private var attributedString: NSAttributedString {
+        let boldAttributes: [NSAttributedString.Key: Any] = [
+            .font: UIFont.boldSystemFont(ofSize: 20),
+            .foregroundColor: UIColor.red
+        ]
+        
+        let regularAttributes: [NSAttributedString.Key: Any] = [
+            .font: UIFont.systemFont(ofSize: 14),
+            .foregroundColor: UIColor.blue
+        ]
+        
+        let firstPart = NSMutableAttributedString(
+            string: "Hello",
+            attributes: regularAttributes
+        )
+        
+        let secondPart = NSMutableAttributedString(
+            string: " World",
+            attributes: boldAttributes
+        )
+        
+        let thirdPart = NSMutableAttributedString(
+            string: ", again",
+            attributes: regularAttributes
+        )
+        thirdPart.addAttribute(
+            .foregroundColor,
+            value: UIColor.orange,
+            range: NSRange(location: 0, length: thirdPart.length)
+        )
+        firstPart.append(secondPart)
+        firstPart.append(thirdPart)
+        return  firstPart
+    }
+    
     func addReport(to document: PDFDocument) async {
         let groupBorder = PDFGroup(
             allowsBreaks: true,
@@ -51,7 +86,7 @@ struct PlaygroundReport: PDFReporting {
             .addBorderShapeRectangle(size: scansSize(document: document), color: .blue)
         
         for _ in 0..<5 {
-            groupBorder.add(image: logo)
+            groupBorder.add(attributedText: attributedString)
         }
         document.add(text: "--- first start ---- ")
         document.add(group: groupBorder)

@@ -6,7 +6,7 @@ import Extensions
 
 struct ContentView: View {
     @State private var pdfData: Data = Data()
-    @State private var reportType: ReportType = .SingleBookingReport
+    @State private var reportType: ReportType = .PlaygroundReport
     @State private var debugFrame = false
 
     var body: some View {

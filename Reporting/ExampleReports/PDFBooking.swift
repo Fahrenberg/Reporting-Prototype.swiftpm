@@ -74,9 +74,26 @@ public struct PDFBooking: PDFReporting {
         )
     }
     
-    private var categoryFormatted: String {
-        reportRecord.record.shortText + " (" +
-        reportRecord.record.cashFlow.rawValue + ")"
+    private var categoryFormatted: NSAttributedString {
+        let boldAttributes: [NSAttributedString.Key: Any] = [
+            .font: PDFReportingStyle.bold
+        ]
+        
+        let regularAttributes: [NSAttributedString.Key: Any] = [
+            .font: PDFReportingStyle.regular
+        ]
+        
+        let shortText = NSMutableAttributedString(
+            string: reportRecord.record.shortText,
+            attributes: boldAttributes
+        )
+        
+        let cashFlowText = NSMutableAttributedString(
+            string: " (" + reportRecord.record.cashFlow.rawValue + ")",
+            attributes: regularAttributes
+        )
+        shortText.append(cashFlowText)
+        return shortText
     }
     
     

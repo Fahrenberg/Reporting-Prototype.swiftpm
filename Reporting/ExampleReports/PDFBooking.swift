@@ -74,9 +74,12 @@ public struct PDFBooking: PDFReporting {
         )
     }
     
-    private var cashFlowFormatted: String {
-        reportRecord.record.cashFlow.rawValue
+    private var categoryFormatted: String {
+        reportRecord.record.shortText + " (" +
+        reportRecord.record.cashFlow.rawValue + ")"
     }
+    
+    
     private var amountFormatted: String {
         let amountValue = Decimal(reportRecord.record.amount) // Ensure Decimal type
         return "CHF " + amountValue.formatted(
@@ -106,7 +109,7 @@ public struct PDFBooking: PDFReporting {
         let row1Table = PDFTable(rows: 1, columns: 2)
         row1Table.style = rowTableStyle
         let row1 = row1Table[row: 0]
-        row1.content = [cashFlowFormatted , dateFormatted]
+        row1.content = [categoryFormatted , dateFormatted]
         row1.style = [boldTextCellStyle, regularTextCellStyle]
         row1.alignment = [.left, .right]
         document.add(table: row1Table)
@@ -129,11 +132,22 @@ public struct PDFBooking: PDFReporting {
     private func addReducedReportInfo(to document: PDFDocument, scanPage: Int, allScanPages: Int) {
         document.addLineSeparator(PDFContainer.contentLeft, style: PDFReportingStyle.dividerLine)
         document.add(space: 5.0)
+        
+        // Add booking information as table
+        let row1Table = PDFTable(rows: 1, columns: 2)
+        row1Table.style = rowTableStyle
+        let row1 = row1Table[row: 0]
+        row1.content = [categoryFormatted , "Belege \(scanPage)/\(allScanPages)"]
+        row1.style = [boldTextCellStyle, regularTextCellStyle]
+        row1.alignment = [.left, .right]
+        document.add(table: row1Table)
+      
+        document.add(space: 2.0)
         document.set(font: PDFReportingStyle.regular)
-        document.add(.contentLeft, text: "\(reportRecord.record.longText) (\(scanPage)/\(allScanPages))")
-        document.add(space: 50.0)
+        document.add(.contentLeft, text: reportRecord.record.longText)
+        document.add(space: 18.0)
         document.addLineSeparator(PDFContainer.contentLeft, style: PDFReportingStyle.dividerLine)
-        document.add(space: 10.0)
+        document.add(space: 5.0)
     }
     
     private func addScans(to document: PDFDocument) async {

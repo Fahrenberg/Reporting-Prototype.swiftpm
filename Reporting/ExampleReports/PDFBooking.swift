@@ -62,7 +62,6 @@ public struct PDFBooking: PDFReporting {
         font: PDFReportingStyle.digit
     )
     
-    // Scans
     private func scansSize(document: PDFDocument) -> CGSize {
         CGSize(width: document.layout.width
                - document.layout.margin.left
@@ -74,7 +73,6 @@ public struct PDFBooking: PDFReporting {
                 // TODO: adjust by header and footer size
         )
     }
-    
     private var categoryFormatted: NSAttributedString {
         let boldAttributes: [NSAttributedString.Key: Any] = [
             .font: PDFReportingStyle.bold
@@ -96,8 +94,6 @@ public struct PDFBooking: PDFReporting {
         shortText.append(cashFlowText)
         return shortText
     }
-    
-    
     private var amountFormatted: String {
         let amountValue = Decimal(reportRecord.record.amount) // Ensure Decimal type
         return "CHF " + amountValue.formatted(

@@ -56,7 +56,7 @@ struct ContentView: View {
         switch reportType {
         case .SingleBookingReport:
             report =  PDFBooking(
-                reportRecord: ReportRecord.mock(scanCount: 1) // using default header
+                reportRecord: ReportRecord.mock(scanCount: 0) // using default header
             )
         case .PlaygroundReport:
             report = PlaygroundReport() // using no header

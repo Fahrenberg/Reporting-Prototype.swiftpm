@@ -183,15 +183,14 @@ public struct PDFBooking: PDFReporting {
     }
     
     private func NoScan(document: PDFDocument) {
-        guard let noScanSymbol = Image(named: "NoSca8n")
-        else {
-            let topSpacer = scansSize(document: document).height / 2
-            document.add(.contentCenter ,space: topSpacer)
-            document.add(.contentCenter, text: "No Scans")
-            return
-        }
-        document.add(.contentCenter ,space: 100)
-        document.add(.contentCenter, image: PDFImage(image: noScanSymbol))
+        guard let noScanSymbol = Image(named: "NoScan"),
+              let resizedNoScanSymbol = noScanSymbol.resized(to: CGSize(width: 50, height: 50)  )
+        else { return }
+        let topSpacer = scansSize(document: document).height / 2 - 100
+        document.add(.contentCenter ,space: topSpacer)
+        document.add(.contentCenter, image: PDFImage(image: resizedNoScanSymbol))
+        document.set(.contentCenter, font: PDFReportingStyle.regular)
+        document.add(.contentCenter, text: "Keine Belege")
     }
     
     private func OneScan(document: PDFDocument) async {

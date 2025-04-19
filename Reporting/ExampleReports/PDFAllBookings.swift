@@ -17,21 +17,26 @@ import Extensions
 public struct PDFAllBookings: PDFReporting {
     public let reportRecords: [ReportRecord]
     public var paperSize: PDFPageFormat = .a4
-    public var landscape: Bool = true
+    public var landscape: Bool = false
    
     // Using default empty header
-//    public var pdfHeader: PDFReportingHeader = PDFLogoImageHeader(
-//        logoImage: PlatformImage.image(named: "ReportingDefaultLogo.png")!
-//        )
-//    
-//    public let pdfFooter: PDFReportingFooter = PDFPaginatedFooter()
+    public var pdfHeader: PDFReportingHeader = PDFLogoImageHeader(
+        logoImage: PlatformImage.image(named: "ReportingDefaultLogo.png")!
+        )
+    
+    public let pdfFooter: PDFReportingFooter = PDFPaginatedFooter()
     
     public  func addReport(to document: PDFDocument) async {
        
-        for reportRecord in reportRecords {
-            let pdfBooking = PDFBooking(reportRecord: reportRecord)
+        for (i, reportRecord)in reportRecords.enumerated() {
+            let pdfBooking = PDFBooking(
+                reportRecord: reportRecord,
+                paperSize: paperSize,
+                landscape: landscape)
             await pdfBooking.addReport(to: document)
-            document.createNewPage()
+            if i < reportRecords.count - 1 {
+                document.createNewPage()
+            }
         }
     }
 }

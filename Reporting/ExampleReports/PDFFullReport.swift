@@ -26,12 +26,19 @@ public struct PDFFullReport: PDFReporting {
     public let pdfFooter: PDFReportingFooter = PDFPaginatedFooter()
     
     public  func addReport(to document: PDFDocument) async {
-        let table = PDFRecordTable(reportRecords: reportRecords)
+        let table = PDFRecordTable(
+            reportRecords: reportRecords,
+            paperSize: paperSize,
+            landscape: landscape
+        )
         table.addReport(to: document)
         
         for reportRecord in reportRecords {
             document.createNewPage()
-            let pdfBooking = PDFBooking(reportRecord: reportRecord)
+            let pdfBooking = PDFBooking(
+                reportRecord: reportRecord,
+                paperSize: paperSize,
+                landscape: landscape)
             await pdfBooking.addReport(to: document)
         }
     }

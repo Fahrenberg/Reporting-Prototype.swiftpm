@@ -70,7 +70,8 @@ public struct PDFBooking: PDFReporting {
                height: document.layout.height
                - document.layout.margin.top
                - document.layout.margin.bottom
-               - 210 // Report info & header
+               - 175 // Report info & header portrait
+                // TODO: adjust by header and footer size
         )
     }
     
@@ -132,7 +133,11 @@ public struct PDFBooking: PDFReporting {
         document.add(table: row1Table)
         
         let row2Table = PDFTable(rows: 1, columns: 3)
-        row2Table.widths = [0.1, 0.6, 0.3]
+        if landscape {
+            row2Table.widths = [0.05, 0.80, 0.15]
+        } else {
+            row2Table.widths = [0.07, 0.68, 0.25]
+        }
         row2Table.style = rowTableStyle
         let row2 = row2Table[row: 0]
         row2.content = [iconImage, reportRecord.record.longText, amountFormatted]
@@ -162,7 +167,7 @@ public struct PDFBooking: PDFReporting {
         document.add(space: 2.0)
         document.set(font: PDFReportingStyle.regular)
         document.add(.contentLeft, text: reportRecord.record.longText)
-        document.add(space: 18.0)
+        document.add(space: 5.0)
         document.addLineSeparator(PDFContainer.contentLeft, style: PDFReportingStyle.dividerLine)
         document.add(space: 5.0)
     }
@@ -174,9 +179,13 @@ public struct PDFBooking: PDFReporting {
         switch scansData.count {
         case 0:
             NoScan(document: document)
+            
         case 1:
             await OneScan(document: document)
-
+            
+        case 2:
+            await TwoScan(document: document)
+            
         default:
             await TwoByTwoScans(document: document)
         }
@@ -208,11 +217,29 @@ public struct PDFBooking: PDFReporting {
         document.add(image: pdfImage)
     }
 
-    private func TwoByTwoScans(document: PDFDocument) async {
-        /// Four scans (2x2) per page, 5 point spacer between scans
+    private func TwoScan(document: PDFDocument) async {
+        /// Two scans per page
         let spacer: Double = 5
         let scanWidth = scansSize(document: document).width / 2 - spacer
-        let scanHeight = scansSize(document: document).height / 2
+        let scanHeight = scansSize(document: document).height
+        let scanSize = CGSize(width: scanWidth, height: scanHeight)
+        let scansData = await reportRecord.scansData
+        let pdfImages: [PDFImage] = scansData.compactMap { data in
+            guard let resizedImage = PlatformImage(data: data)?.resized(to: scanSize) else {return nil }
+            let framedImage = resizedImage.fillFrame().addFrame()
+            return PDFImage(image: framedImage, options: [.none])
+        }
+        let imageGroup = PDFGroup(allowsBreaks: false, backgroundColor: .white)
+        imageGroup.add(.left, imagesInRow: pdfImages)
+        document.add(group: imageGroup)
+    }
+    
+    private func TwoByTwoScans(document: PDFDocument) async {
+        /// Four scans (2x2) per page, 5 point spacer between scans,
+        /// TODO: skip height spacer added to second line
+        let spacer: Double = 5
+        let scanWidth = scansSize(document: document).width / 2 - spacer
+        let scanHeight = scansSize(document: document).height / 2 - spacer
         
         
         let scanSize = CGSize(width: scanWidth, height: scanHeight)
@@ -225,6 +252,7 @@ public struct PDFBooking: PDFReporting {
         let fourPDFImages = pdfImages.chunked(into: 4)
         let pageCount = fourPDFImages.count
         var currentPage = 1
+        var skipSpacer = false
         
         for pdfImages in fourPDFImages {
             let imageGroup = PDFGroup(allowsBreaks: false, backgroundColor: .white)
@@ -238,7 +266,10 @@ public struct PDFBooking: PDFReporting {
                 // When two images have been collected, add them as a row and reset the temporary array.
                 if pdfImagesRow.count == 2 {
                     imageGroup.add(.left, imagesInRow: pdfImagesRow)
-                    imageGroup.add(space: spacer)
+                    if !skipSpacer {
+                        imageGroup.add(space: spacer)
+                        skipSpacer = true // only 4x4, second image row without adding a spacer
+                    }
                     pdfImagesRow.removeAll()
                 }
             }
@@ -252,6 +283,7 @@ public struct PDFBooking: PDFReporting {
             currentPage += 1
             if currentPage <= pageCount {
                 document.createNewPage()
+                skipSpacer = false
                 addReducedReportInfo(to: document, scanPage: currentPage, allScanPages: pageCount)
             }
         }

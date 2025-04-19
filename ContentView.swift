@@ -56,12 +56,20 @@ struct ContentView: View {
         switch reportType {
         case .SingleBookingReport:
             report =  PDFBooking(
-                reportRecord: ReportRecord.mock(scanCount: 0) // using default header
+                reportRecord: ReportRecord.mock(scanCount: 1) // using default header
             )
             
         case .AllBookingsReport:
+            var reportRecords = ReportRecords.mocks()
+            var newReportRecord = ReportRecord.mock(scanCount: 6)
+            var addReportRecord = ReportRecord(
+                record: Record(longText: """
+                Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren est Lorem ipsum dolor sit amet.
+                """),
+                scanFilename: newReportRecord.scanFilename)
+            reportRecords.append(addReportRecord)
             report = PDFAllBookings(
-                reportRecords: ReportRecords.mocks()
+                reportRecords: reportRecords
             )
             
         case .PlaygroundReport:

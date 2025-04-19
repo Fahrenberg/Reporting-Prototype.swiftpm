@@ -6,7 +6,7 @@ import Extensions
 
 struct ContentView: View {
     @State private var pdfData: Data = Data()
-    @State private var reportType: ReportType = .SingleBookingReport
+    @State private var reportType: ReportType = .AllBookingsReport
     @State private var debugFrame = false
 
     var body: some View {
@@ -58,17 +58,26 @@ struct ContentView: View {
             report =  PDFBooking(
                 reportRecord: ReportRecord.mock(scanCount: 0) // using default header
             )
+            
+        case .AllBookingsReport:
+            report = PDFAllBookings(
+                reportRecords: ReportRecords.mocks()
+            )
+            
         case .PlaygroundReport:
             report = PlaygroundReport() // using no header
+            
         case .FullReport:
             report = PDFFullReport(
                 reportRecords: ReportRecords.mocks(),
                 pdfHeader: PDFLogoImageHeader(logoImage: trafinaLogo) // overwriting header for PDFFullReport
             )
+            
         case .TableReport:
             report = PDFRecordTable(
                 reportRecords: ReportRecords.mocks()
             )
+            
         case .ExternalPDF:
             report = ExternalPDF()
         }
@@ -124,6 +133,7 @@ struct PDFKitView: UIViewRepresentable {
 //}
 enum ReportType: String, CaseIterable {
     case SingleBookingReport
+    case AllBookingsReport
     case PlaygroundReport
     case FullReport
     case TableReport

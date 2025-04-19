@@ -84,12 +84,12 @@ extension PDFReporting {
     }
     
     /// Default implementation of pdfHeader
-    var pdfHeader: PDFReportingHeader {
+    public var pdfHeader: PDFReportingHeader {
            return PDFEmptyHeader()
        }
     
     /// Default implementation of pdfFooter
-    var pdfFooter: PDFReportingFooter {
+    public var pdfFooter: PDFReportingFooter {
         PDFEmptyFooter()
     }
 }

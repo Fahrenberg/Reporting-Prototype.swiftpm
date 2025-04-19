@@ -236,7 +236,6 @@ public struct PDFBooking: PDFReporting {
     
     private func TwoByTwoScans(document: PDFDocument) async {
         /// Four scans (2x2) per page, 5 point spacer between scans,
-        /// TODO: skip height spacer added to second line
         let spacer: Double = 5
         let scanWidth = scansSize(document: document).width / 2 - spacer
         let scanHeight = scansSize(document: document).height / 2 - spacer

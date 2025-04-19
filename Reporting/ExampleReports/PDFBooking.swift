@@ -195,9 +195,18 @@ public struct PDFBooking: PDFReporting {
     }
     
     private func OneScan(document: PDFDocument) async {
-        let topSpacer = scansSize(document: document).height / 2 - 20
-        document.add(.contentCenter ,space: topSpacer)
-        document.add(.contentCenter ,text: "One Scan")
+        /// One scans per page
+        let scanWidth = scansSize(document: document).width
+        let scanHeight = scansSize(document: document).height
+        let scanSize = CGSize(width: scanWidth, height: scanHeight)
+        let scansData = await reportRecord.scansData
+        guard let firstScanData = scansData.first,
+              let resizedImage = PlatformImage(data: firstScanData)?.resized(to: scanSize)
+        else { return }
+        
+        let scanImage = resizedImage.fillFrame().addFrame()
+        let pdfImage = PDFImage(image: scanImage, options: [.none])
+        document.add(image: pdfImage)
     }
 
     private func TwoByTwoScans(document: PDFDocument) async {

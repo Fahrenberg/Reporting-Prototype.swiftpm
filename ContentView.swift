@@ -6,7 +6,7 @@ import Extensions
 
 struct ContentView: View {
     @State private var pdfData: Data = Data()
-    @State private var reportType: ReportType = .PlaygroundReport
+    @State private var reportType: ReportType = .SingleBookingReport
     @State private var debugFrame = false
 
     var body: some View {
@@ -56,7 +56,7 @@ struct ContentView: View {
         switch reportType {
         case .SingleBookingReport:
             report =  PDFBooking(
-                reportRecord: ReportRecord.mock(scanCount: 6) // using default header
+                reportRecord: ReportRecord.mock(scanCount: 1) // using default header
             )
         case .PlaygroundReport:
             report = PlaygroundReport() // using no header

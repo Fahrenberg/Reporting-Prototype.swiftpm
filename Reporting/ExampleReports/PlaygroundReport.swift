@@ -13,27 +13,10 @@ struct PlaygroundReport: PDFReporting {
     public var landscape: Bool = true
     
     let pdfFooter: PDFReportingFooter = PlaygroundFooter()
-    
-    // Scans
-    private func scansSize(document: PDFDocument) -> CGSize  {
-        let documentContentWidth = document.layout.width
-        - document.layout.margin.left
-        - document.layout.margin.right
-        
-//        let documentContentHeight =  document.layout.height
-//        - document.layout.margin.top
-//        - document.layout.margin.bottom
-        
-        return CGSize(
-            width: documentContentWidth,
-            height: 275
-        )
-    }
-    
+    let logoSize = CGSize(width: 250, height: 70)
     private var logo: PDFImage {
-        let logoSize = CGSize(width: 250, height: 47)
         let logoImage = logoImage
-        guard let resizedImage = logoImage.resized(to: logoSize, alignment: .right)
+        guard let resizedImage = logoImage.resized(to: logoSize, alignment: .left)
         else { fatalError() }
         let finalImage = resizedImage.fillFrame(frameColor: .white).addFrame(frameColor: .lightGray)
         return PDFImage(image: finalImage, options: [.none])
@@ -105,16 +88,23 @@ struct PlaygroundReport: PDFReporting {
         
         document.createNewPage()
         document.add(text: "--- thrid start ---- ")
-        
+
+        let maxLogoImages = 5
+        let groupImageSize = CGSize(
+            width:  document.layout.width 
+                    - document.layout.margin.left
+                    - document.layout.margin.right,
+            height: (logoSize.height + 10) * CGFloat(maxLogoImages)
+        )
         let group = PDFGroup(
             allowsBreaks: true,
             backgroundColor: .clear,
             outline: lineStyle,
             padding: EdgeInsets(top: 10, left: 10, bottom: 10, right: 10)
         )
-            .addBorderShapeRectangle(size: scansSize(document: document), color: .blue)
+            .addBorderShapeRectangle(size: groupImageSize, color: .blue)
         
-        for _ in 0..<5 {
+        for _ in 0..<maxLogoImages {
             group.add(image: logo)
         }
         document.add(group: group)
@@ -153,4 +143,5 @@ fileprivate struct PlaygroundFooter: PDFReportingFooter {
         document.pagination = pagination
         
     }
+     public let height: CGFloat = 0
 }

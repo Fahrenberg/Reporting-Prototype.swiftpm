@@ -60,14 +60,7 @@ struct ContentView: View {
             )
             
         case .AllBookingsReport:
-            var reportRecords = ReportRecords.mocks()
-            var newReportRecord = ReportRecord.mock(scanCount: 6)
-            var addReportRecord = ReportRecord(
-                record: Record(longText: """
-                Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren est Lorem ipsum dolor sit amet.
-                """),
-                scanFilename: newReportRecord.scanFilename)
-            reportRecords.append(addReportRecord)
+            let reportRecords = ReportRecords.mocks()
             report = PDFAllBookings(
                 reportRecords: reportRecords
             )

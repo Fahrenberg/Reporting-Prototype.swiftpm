@@ -1,14 +1,3 @@
-#if os(iOS)
-import UIKit
-#elseif os(macOS)
-import AppKit
-#endif
-import TPPDF
-import ImageCompressionKit
-import Extensions
-import CoreGraphics
-import OSLog
-
 //
 //  PDFBooking.swift
 //  Reporting

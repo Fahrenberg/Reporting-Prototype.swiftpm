@@ -12,6 +12,8 @@ import TPPDF
 public protocol PDFReportingFooter {
     ///  Customised Report Footer layout
     func add(to document: PDFDocument) async
+    /// Height of footer in pixel
+    var height: CGFloat { get }
 }
 /// Empty footer
 ///
@@ -19,6 +21,7 @@ public protocol PDFReportingFooter {
 /// - Skips pdf footer area .
 public struct PDFEmptyFooter: PDFReportingFooter {
     public func add(to document: PDFDocument) async {}
+    public let height: CGFloat = 0
 }
 
 /// Default footer with page numbers and printing date
@@ -55,4 +58,5 @@ public struct PDFPaginatedFooter: PDFReportingFooter  {
         )
         document.pagination = pagination
     }
+     public let height: CGFloat = 0
 }

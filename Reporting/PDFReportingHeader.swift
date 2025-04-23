@@ -11,10 +11,13 @@ import TPPDF
 public protocol PDFReportingHeader {
     ///  Customised Report Header layout
     func add(to document: PDFDocument) async
+    /// Height of header in pixel
+    var height: CGFloat { get }
 }
 
 public struct PDFEmptyHeader: PDFReportingHeader {
     public func add(to document: PDFDocument) async {}
+    public let height: CGFloat = 0
 }
 
 /// Default implementation of PDF header
@@ -26,7 +29,7 @@ public struct PDFLogoImageHeader: PDFReportingHeader {
     public let logoImage: PlatformImage
     /// Logo Header Implementation
     public func add(to document: PDFDocument) async {
-        let logoSize = CGSize(width: 300, height: 70)
+        let logoSize = CGSize(width: 300, height: height)
         var logo: PDFImage {
             guard let resizedImage = logoImage.resized(to: logoSize, alignment: .right)
             else { fatalError() }
@@ -36,4 +39,5 @@ public struct PDFLogoImageHeader: PDFReportingHeader {
         // Logo Header
         document.add(.headerRight, image: logo)
     }
+    public let height: CGFloat = 70
 }

@@ -52,6 +52,9 @@ public struct PDFBooking: PDFReporting {
     )
     
     private func scansSize(document: PDFDocument) -> CGSize {
+        // TODO: adjust height by document header and footer size
+        // TODO: adjust height to record.longText height
+        
         CGSize(width: document.layout.width
                - document.layout.margin.left
                - document.layout.margin.right,
@@ -59,9 +62,9 @@ public struct PDFBooking: PDFReporting {
                - document.layout.margin.top
                - document.layout.margin.bottom
                - 175 // Report info & header portrait
-                // TODO: adjust by header and footer size
         )
     }
+    
     private var categoryFormatted: NSAttributedString {
         let boldAttributes: [NSAttributedString.Key: Any] = [
             .font: PDFReportingStyle.bold

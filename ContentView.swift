@@ -56,13 +56,15 @@ struct ContentView: View {
         switch reportType {
         case .SingleBookingReport:
             report =  PDFBooking(
-                reportRecord: ReportRecord.mock(scanCount: 1) // using default header
+                reportRecord: ReportRecord.mock(scanCount: 6) // long trext mock
+                // using default header
             )
             
         case .AllBookingsReport:
             let reportRecords = ReportRecords.mocks()
             report = PDFAllBookings(
-                reportRecords: reportRecords
+                reportRecords: reportRecords,
+                landscape: true
             )
             
         case .PlaygroundReport:

@@ -58,5 +58,5 @@ public struct PDFPaginatedFooter: PDFReportingFooter  {
         )
         document.pagination = pagination
     }
-     public let height: CGFloat = 0
+     public let height: CGFloat = 10
 }

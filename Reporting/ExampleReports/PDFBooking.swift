@@ -52,17 +52,36 @@ public struct PDFBooking: PDFReporting {
     )
     
     private func scansSize(document: PDFDocument) -> CGSize {
-        // TODO: adjust height by document header and footer size
-        // TODO: adjust height to record.longText height
+        let contentWidth = document.layout.width
+            - document.layout.margin.left
+            - document.layout.margin.right
         
-        CGSize(width: document.layout.width
-               - document.layout.margin.left
-               - document.layout.margin.right,
-               height: document.layout.height
-               - document.layout.margin.top
-               - document.layout.margin.bottom
-               - 175 // Report info & header portrait
-        )
+        let contentHeight =  document.layout.height
+            - document.layout.margin.top
+            - document.layout.margin.bottom
+        
+        let textHeight = document.calculateTextHeight(
+            text: reportRecord.record.longText,
+            width: contentWidth * 0.7, // take spacer in table into accout
+            font: regularTextCellStyle.font
+            ) +
+            document.calculateTextHeight(
+                text: "Any Text",
+                width: contentWidth,
+                font: regularTextCellStyle.font
+            )
+        
+        let spacers: CGFloat = 70 // more try and error to fit portrait and landscape
+        
+        let pageMarginHeight: CGFloat = pdfHeader.height + pdfFooter.height
+        
+        return CGSize(
+            width:  contentWidth,
+            height: contentHeight
+                    - pageMarginHeight
+                    - textHeight
+                    - spacers
+            )
     }
     
     private var categoryFormatted: NSAttributedString {

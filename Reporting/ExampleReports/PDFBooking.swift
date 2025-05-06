@@ -51,7 +51,7 @@ public struct PDFBooking: PDFReporting {
         font: PDFReportingStyle.digit
     )
     
-    private func scansSize(document: PDFDocument) -> CGSize {
+    private func scansAreaSize(document: PDFDocument) -> CGSize {
         let contentWidth = document.layout.width
             - document.layout.margin.left
             - document.layout.margin.right
@@ -202,7 +202,7 @@ public struct PDFBooking: PDFReporting {
         guard let noScanSymbol = Image(named: "NoScan"),
               let resizedNoScanSymbol = noScanSymbol.resized(to: CGSize(width: 50, height: 50)  )
         else { return }
-        let topSpacer = scansSize(document: document).height / 2 - 100
+        let topSpacer = scansAreaSize(document: document).height / 2 - 100
         document.add(.contentCenter ,space: topSpacer)
         document.add(.contentCenter, image: PDFImage(image: resizedNoScanSymbol))
         document.set(.contentCenter, font: PDFReportingStyle.regular)
@@ -211,9 +211,9 @@ public struct PDFBooking: PDFReporting {
     
     private func OneScan(document: PDFDocument) async {
         /// One scans per page
-        let scanWidth = scansSize(document: document).width
-        let scanHeight = scansSize(document: document).height
-        let scanSize = CGSize(width: scanWidth, height: scanHeight)
+        let scansArea = scansAreaSize(document: document)
+
+        let scanSize = CGSize(width: scansArea.width, height: scansArea.height)
         let scansData = await reportRecord.scansData
         guard let firstScanData = scansData.first,
               let resizedImage = PlatformImage(data: firstScanData)?.resized(to: scanSize)
@@ -227,8 +227,10 @@ public struct PDFBooking: PDFReporting {
     private func TwoScan(document: PDFDocument) async {
         /// Two scans per page
         let spacer: Double = 5
-        let scanWidth = scansSize(document: document).width / 2 - spacer
-        let scanHeight = scansSize(document: document).height
+        let scansArea = scansAreaSize(document: document)
+        let scanWidth = scansArea.width / 2 - spacer
+        let scanHeight = scansArea.height
+
         let scanSize = CGSize(width: scanWidth, height: scanHeight)
         let scansData = await reportRecord.scansData
         let pdfImages: [PDFImage] = scansData.compactMap { data in
@@ -244,9 +246,9 @@ public struct PDFBooking: PDFReporting {
     private func TwoByTwoScans(document: PDFDocument) async {
         /// Four scans (2x2) per page, 5 point spacer between scans,
         let spacer: Double = 5
-        let scanWidth = scansSize(document: document).width / 2 - spacer
-        let scanHeight = scansSize(document: document).height / 2 - spacer
-        
+        let scansArea = scansAreaSize(document: document)
+        let scanWidth = scansArea.width / 2 - spacer
+        let scanHeight = scansArea.height / 2 - spacer
         
         let scanSize = CGSize(width: scanWidth, height: scanHeight)
         let scansData = await reportRecord.scansData
